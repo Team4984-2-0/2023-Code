@@ -9,7 +9,10 @@
 This Repository houses the Season 2023 Code for the for Team 4984.
 
 ## Robot Breakdown
-
+- Robot Drive train
+- grabber
+- Autonomous 
+- Teleop
 
 
 
