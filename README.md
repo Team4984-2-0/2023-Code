@@ -1,5 +1,5 @@
 # Bulleye Team 4989 Season 2023 Code
-
+[![Java CI with Gradle](https://github.com/Team4984-2-0/2023-Code/actions/workflows/gradle.yml/badge.svg?branch=main&event=push)](https://github.com/Team4984-2-0/2023-Code/actions/workflows/gradle.yml)
 - [Summary](https://github.com/Team4984-2-0/2023-Code/edit/main/README.md#summary)
 - [Robot Breakdown](https://github.com/Team4984-2-0/2023-Code/edit/main/README.md#robot-breakdown) 
 - [Resources](https://github.com/Team4984-2-0/2023-Code/edit/main/README.md#resources)
