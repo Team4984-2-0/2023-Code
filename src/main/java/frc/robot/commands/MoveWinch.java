@@ -19,11 +19,6 @@ import frc.robot.Robot;
 
 import frc.robot.subsystems.Winch;
 
-
-
-/**
- *
- */
 public class MoveWinch extends CommandBase {
 
     
