@@ -11,13 +11,12 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
-
-
 
 public class TankDrive extends CommandBase {
 
@@ -26,17 +25,13 @@ public class TankDrive extends CommandBase {
     private double right;
     private XboxController xbox;
 
+    public TankDrive(XboxController controller, DriveTrain subsystem) {
 
-
-    public TankDrive(XboxController xboxe, DriveTrain subsystem) {
-
-        xbox = xboxe;
-
+        xbox = controller;
 
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
 
-        
     }
 
     // Called when the command is initially scheduled.
@@ -48,7 +43,7 @@ public class TankDrive extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        //m_driveTrain.drive(m_LeftStick.getAsDouble(), m_RightStick.getAsDouble());
+        // m_driveTrain.drive(m_LeftStick.getAsDouble(), m_RightStick.getAsDouble());
         left = xbox.getLeftY();
         right = xbox.getRightY();
         m_driveTrain.drive(left, right);
