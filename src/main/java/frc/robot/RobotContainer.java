@@ -77,7 +77,7 @@ public class RobotContainer {
     // Smartdashboard Subsystems
 
     // SmartDashboard Buttons
-    SmartDashboard.putData("Autonomous Command", new AutonomousCommand());
+    SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -86,11 +86,11 @@ public class RobotContainer {
 
     // Configure autonomous sendable chooser
 
-    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand());
+    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
 
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain)); // THIS IS
-                                                                             // IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                                             // DON'T FORGET IT!!!!!!!!!!!!!!!!
+                                                                         // IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                                         // DON'T FORGET IT!!!!!!!!!!!!!!!!
     m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
     m_Grabber.setDefaultCommand(new MoveGrabber(operator, m_Grabber));
 

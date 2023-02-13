@@ -17,6 +17,8 @@ import frc.robot.commands.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -34,9 +36,11 @@ public class DriveTrain extends SubsystemBase {
     private MotorControllerGroup rightMotors;
     private DifferentialDrive differentialDrive1;
 
-    /**
-    *
-    */
+    private static AHRS m_DriveTrainGryo;
+    private int loopcounter;
+
+    
+
     public DriveTrain() {
         leftBackMotor = new CANSparkMax(4, MotorType.kBrushed);
 
@@ -57,7 +61,16 @@ public class DriveTrain extends SubsystemBase {
         // differentialDrive1.setSafetyEnabled(true);
         // differentialDrive1.setExpiration(0.1);
         // differentialDrive1.setMaxOutput(1.0);
+        try {
+                m_DriveTrainGryo = new AHRS(SPI.Port.kMXP);
+        } catch (RuntimeException ex) {
+            //Driver Station.reportError("Error instantiating navX MXP: " + ex.getMessage(), true);
+        }
+        if (m_DriveTrainGryo != null); {
+                m_DriveTrainGryo.reset();
+        }
 
+        loopcounter = 0;
     }
 
     @Override
@@ -78,7 +91,14 @@ public class DriveTrain extends SubsystemBase {
     public void drive(double leftDrive, double rightDrive) {
 
         // Robot.printYellow(leftDrive + "," + rightDrive);
-        differentialDrive1.tankDrive(leftDrive, rightDrive);
+        differentialDrive1.tankDrive(leftDrive, -rightDrive);
+
+        loopcounter++;
+        if (loopcounter>3){
+            System.out.println("DriveTrain pitch = " + m_DriveTrainGryo.getPitch());
+            loopcounter = 0;
+        }
+
     }
 
 }

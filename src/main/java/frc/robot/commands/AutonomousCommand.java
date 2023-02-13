@@ -11,8 +11,10 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Winch;
+import frc.robot.subsystems.DriveTrain;
 
 
 /**
@@ -20,12 +22,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  */
 public class AutonomousCommand extends CommandBase {
 
+    private Grabber m_Grabber;
+    private Winch m_Winch;
+    private DriveTrain m_DriveTrain;
 
-    public AutonomousCommand() {
 
-
-        // m_subsystem = subsystem;
-        // addRequirements(m_subsystem);
+    public AutonomousCommand(Grabber Grabber_sub, Winch Winch_sub, DriveTrain DriveTrain_sub) {
+        m_Grabber = Grabber_sub;
+        m_Winch = Winch_sub;
+        m_DriveTrain = DriveTrain_sub;
 
     }
 
@@ -34,9 +39,29 @@ public class AutonomousCommand extends CommandBase {
     public void initialize() {
     }
 
+    // Wait for a certain amount of time, easier to use this rather than repeating the try/catch
+    private void wait(int timeInMS){
+        try {
+            Thread.sleep(timeInMS);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        m_DriveTrain.drive(0.5, 0.5);
+        wait(1000);
+        m_DriveTrain.drive(0, 0);
+
+
+
+
+
+
+
     }
 
     // Called once the command ends or is interrupted.
@@ -52,6 +77,9 @@ public class AutonomousCommand extends CommandBase {
 
     @Override
     public boolean runsWhenDisabled() {
+
         return false;
+
+
     }
 }
