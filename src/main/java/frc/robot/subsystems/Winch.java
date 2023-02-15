@@ -56,7 +56,7 @@ winchMotor = new CANSparkMax(5, MotorType.kBrushed);
     public void move(double Value)
     {
         // moves the motor
-        Robot.printYellow(Double.toString(Value));
+        //Robot.printYellow(Double.toString(Value));
         winchMotor.set(Value);
     }
     
