@@ -59,6 +59,8 @@ winchMotor = new CANSparkMax(5, MotorType.kBrushed);
         //Robot.printYellow(Double.toString(Value));
         winchMotor.set(Value);
     }
+
+    
     
 
     

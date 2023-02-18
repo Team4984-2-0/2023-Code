@@ -21,8 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.TankDrive;
-import frc.robot.commands.MoveWinch;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -116,6 +115,11 @@ public class RobotContainer {
     // xbutton.onTrue();
     // new JoystickButton(operator, Button.kX.value)
     // .whileTrue(new MoveGrabber(operator,m_Grabber));
+
+    // Winch ~
+    DigitalInput winchInput = new DigitalInput(0);
+    Trigger winchTrigger = new Trigger(winchInput::get);
+    winchTrigger.onTrue(new WinchStop(m_Winch));
   }
 
   /**
