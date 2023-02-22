@@ -18,16 +18,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.PIDDriveTrain;
 
-public class TankDrive extends CommandBase {
+public class BalanceCommand extends CommandBase {
 
     private final PIDDriveTrain m_driveTrain;
-    private double left;
-    private double right;
-    private XboxController xbox;
+    private double navXoutput;
 
-    public TankDrive(XboxController controller, PIDDriveTrain subsystem) {
+    public BalanceCommand(PIDDriveTrain subsystem) {
 
-        xbox = controller;
+
 
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
@@ -44,9 +42,8 @@ public class TankDrive extends CommandBase {
     @Override
     public void execute() {
         // m_driveTrain.drive(m_LeftStick.getAsDouble(), m_RightStick.getAsDouble());
-        left = xbox.getLeftY();
-        right = xbox.getRightY();
-        m_driveTrain.drive(left, right);
+        navXoutput = m_driveTrain.getMeasurement();
+        m_driveTrain.useOutput(navXoutput, 90.0);
     }
 
     // Called once the command ends or is interrupted.
