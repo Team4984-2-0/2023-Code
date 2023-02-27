@@ -16,16 +16,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.PIDDriveTrain;
 
 public class TankDrive extends CommandBase {
 
-    private final DriveTrain m_driveTrain;
+    private final PIDDriveTrain m_driveTrain;
     private double left;
     private double right;
     private XboxController xbox;
 
-    public TankDrive(XboxController controller, DriveTrain subsystem) {
+    public TankDrive(XboxController controller, PIDDriveTrain subsystem) {
 
         xbox = controller;
 
@@ -37,7 +37,7 @@ public class TankDrive extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        Robot.printYellow("~     We're starting!     ~");
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
