@@ -21,6 +21,9 @@ import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -37,6 +40,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.cscore.VideoSource;
 
 import frc.robot.subsystems.Grabber;
 
@@ -94,6 +99,22 @@ public class RobotContainer {
     m_Grabber.setDefaultCommand(new MoveGrabber(operator, m_Grabber));
 
     SmartDashboard.putData("Auto Mode", m_chooser);
+
+    CameraThread myCameraThread = new CameraThread();
+    CameraServer.getServer();
+    usbCamera1 = CameraServer.startAutomaticCapture(myCameraThread.CAMERA1);
+   // usbCamera2 = CameraServer.startAutomaticCapture(myCameraThread.CAMERA2);
+    CameraServer.getServer();
+    myCameraThread.server = CameraServer.getServer();
+
+    usbCamera1.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+
+
+    myCameraThread.setCameraConfig();
+ 
+    myCameraThread.start();
+    myCameraThread.setResolutionHigh();
+    myCameraThread.getCameraConfig();
   }
 
   public static RobotContainer getInstance() {
@@ -135,4 +156,62 @@ public class RobotContainer {
   public class configureButtonBindings {
   }
 
+  public static UsbCamera usbCamera1 = null;
+  // public static UsbCamera usbCamera2 = null;
+   public class CameraThread extends Thread {
+     final int CAMERA1 = 0;
+   //  final int CAMERA2 = 1;
+    private final int currentCamera = CAMERA1;   // UNCOMMENT WHEN RUNNING THE PROGRAM THRU ROBORIO!!!!
+ 
+     VideoSink server;
+     
+     public void run(){
+         System.out.println("CameraThread running");
+ 
+      }
+ 
+      public void setResolutionLow(){
+         System.out.println("CameraThread rsetResolutionLow running");
+         usbCamera1.setResolution(150, 150);
+         usbCamera1.setFPS(Constants.CAMERA1_FPS);
+ 
+     }
+ 
+     public void setResolutionHigh(){
+         System.out.println("CameraThread rsetResolutionHigh running");
+         usbCamera1.setResolution(150, 150);
+         usbCamera1.setFPS(Constants.CAMERA1_FPS);
+     }
+ 
+     public void setCameraSource(){
+         System.out.println("CameraThread setCameraSource running");
+         server.setSource(usbCamera1);
+         SmartDashboard.putString("My Key", "Hello");
+     }
+ 
+     public void getCameraConfig(){
+         System.out.println("CameraThread getPrintCameraConfig running");
+         String cameraConfig; 
+         cameraConfig = usbCamera1.getConfigJson();
+         if (cameraConfig.isEmpty() == false) {
+            // System.out.println(cameraConfig.toString()); //print to console
+         }
+     }
+ 
+     public void setCameraConfig(){
+         System.out.println("CameraThread setPrintCameraConfig running");
+ 
+         
+         usbCamera1.setFPS(Constants.CAMERA1_FPS);
+         usbCamera1.setBrightness(Constants.CAMERA1_BRIGHTNESS);  
+         usbCamera1.setExposureAuto();  
+ 
+       /*  usbCamera2.setFPS(Constants.CAMERA2_FPS);
+         usbCamera2.setBrightness(Constants.CAMERA2_BRIGHTNESS);
+         usbCamera2.setExposureAuto();
+       
+         */
+       }
+
+}
 }

@@ -32,4 +32,11 @@ public class Constants {
      * public static final int kRightMotor2Port = 3;
      * }
      */
+
+     //CAMERA FUNCTIONS
+    public static final int CAMERA1_FPS = 12;
+    public static final int CAMERA2_FPS = 12;
+
+    public static final int CAMERA1_BRIGHTNESS = 50;
+    public static final int CAMERA2_BRIGHTNESS = 44;
 }
