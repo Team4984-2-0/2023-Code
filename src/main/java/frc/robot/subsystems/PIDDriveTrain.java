@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.math.MathUtil;
+import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj.SPI;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -29,7 +31,7 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 
 public class PIDDriveTrain extends PIDSubsystem {
 
-    private static AHRS m_DriveTrainGryo;
+    private static AHRS m_DriveTrainGyro;
     private CANSparkMax leftBackMotor;
     private CANSparkMax leftFrontMotor;
     private MotorControllerGroup leftMotors;
@@ -42,6 +44,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private RelativeEncoder leftFrontEncoder;
     private RelativeEncoder rightBackEncoder;
     private RelativeEncoder rightFrontEncoder;
+    private IdleMode MotorMode;
 
     // P I D Variables
     private static final double kP = 1.0;
@@ -49,7 +52,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private static final double kD = 0.0;
     private static final double kF = 1.0;
 
-    private static final String robottype = "testboard";
+    private static final String robottype = "";
 
     // Initialize your subsystem here
     public PIDDriveTrain() {
@@ -58,37 +61,37 @@ public class PIDDriveTrain extends PIDSubsystem {
         getController().setTolerance(0.2);
 
         try {
-            m_DriveTrainGryo = new AHRS(SPI.Port.kMXP);
+            m_DriveTrainGyro = new AHRS(SPI.Port.kMXP);
         } catch (RuntimeException ex) {
             // Driver Station.reportError("Error instantiating navX MXP: " +
             // ex.getMessage(), true);
         }
-        if (m_DriveTrainGryo != null)
+        if (m_DriveTrainGyro != null)
             ;
         {
-            m_DriveTrainGryo.reset();
+            m_DriveTrainGyro.reset();
         }
 
         if (robottype == "testboard") {
             // Left Motors
-            leftBackMotor = new CANSparkMax(4, MotorType.kBrushed);
-            leftFrontMotor = new CANSparkMax(3, MotorType.kBrushed);
+            leftBackMotor = new CANSparkMax(Constants.CANBackLeft, MotorType.kBrushed);
+            leftFrontMotor = new CANSparkMax(Constants.CANFrontLeft, MotorType.kBrushed);
             leftMotors = new MotorControllerGroup(leftBackMotor, leftFrontMotor);
             addChild("Motor Controller Group 1", leftMotors);
             // Right Motors
-            rightBackMotor = new CANSparkMax(2, MotorType.kBrushed);
-            rightFrontMotor = new CANSparkMax(1, MotorType.kBrushed);
+            rightBackMotor = new CANSparkMax(Constants.CANBackRight, MotorType.kBrushed);
+            rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushed);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
         } else {
             // Left Motors
-            leftBackMotor = new CANSparkMax(4, MotorType.kBrushless);
-            leftFrontMotor = new CANSparkMax(3, MotorType.kBrushless);
+            leftBackMotor = new CANSparkMax(Constants.CANBackLeft, MotorType.kBrushless);
+            leftFrontMotor = new CANSparkMax(Constants.CANFrontLeft, MotorType.kBrushless);
             leftMotors = new MotorControllerGroup(leftBackMotor, leftFrontMotor);
             addChild("Motor Controller Group 1", leftMotors);
             // Right Motors
-            rightBackMotor = new CANSparkMax(2, MotorType.kBrushless);
-            rightFrontMotor = new CANSparkMax(1, MotorType.kBrushless);
+            rightBackMotor = new CANSparkMax(Constants.CANBackRight, MotorType.kBrushless);
+            rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushless);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
 
@@ -123,20 +126,18 @@ public class PIDDriveTrain extends PIDSubsystem {
     @Override
     public double getMeasurement() {
 
-        return m_DriveTrainGryo.getPitch();
+        return m_DriveTrainGyro.getPitch();
     }
 
     @Override
     public void useOutput(double output, double setpoint) {
-        if((setpoint - output) > 2.0) {
+        if ((setpoint - output) > 2.0) {
             leftMotors.set(-0.3);
             rightMotors.set(0.3);
-        }
-        else if((setpoint - output) < -2.0) {
+        } else if ((setpoint - output) < -2.0) {
             leftMotors.set(0.3);
             rightMotors.set(-0.3);
-        }
-        else {
+        } else {
             leftMotors.set(0);
             rightMotors.set(0);
         }
@@ -154,16 +155,66 @@ public class PIDDriveTrain extends PIDSubsystem {
 
     public void drive(double leftDrive, double rightDrive) {
 
-        //Robot.printYellow(leftDrive + "," + rightDrive);
-        //System.out.println(leftDrive + "," + rightDrive);
+        // Robot.printYellow(leftDrive + "," + rightDrive);
+        // System.out.println(leftDrive + "," + rightDrive);
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
 
         loopcounter++;
         if (loopcounter > 3) {
-            System.out.println("DriveTrain pitch = " + m_DriveTrainGryo.getPitch());
+            System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());
             loopcounter = 0;
         }
 
     }
 
+    public void setCoastMode() {
+        leftBackMotor.setIdleMode(IdleMode.kCoast);
+        leftBackMotor.setIdleMode(IdleMode.kCoast);
+        rightFrontMotor.setIdleMode(IdleMode.kCoast);
+        rightBackMotor.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void setBrakeMode() {
+        leftFrontMotor.setIdleMode(IdleMode.kBrake);
+        leftBackMotor.setIdleMode(IdleMode.kBrake);
+        rightFrontMotor.setIdleMode(IdleMode.kBrake);
+        rightBackMotor.setIdleMode(IdleMode.kBrake);
+    }
+
+    public void ToggleMotorMode() {
+
+        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake)
+         {
+            setCoastMode();
+            MotorMode = IdleMode.kCoast;
+        }
+        else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
+            setBrakeMode();
+            MotorMode = IdleMode.kBrake;
+        } else {
+            System.out.println("mismatched motor modes setting all motors to coast mode");
+            setCoastMode();
+            MotorMode = IdleMode.kCoast;
+        }
+    }
+    public double getNavXRoll(){
+        return m_DriveTrainGyro.getRoll();
+    }
+    
+    public String getMotorMode() {
+
+        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake)
+         {
+            return "Brake Mode Enabled";
+
+        }
+        else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
+            return "Coast Mode Enabled";
+
+        } else {
+            return "mismatched motor modes";
+
+
+        }
+    }
 }

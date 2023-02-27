@@ -18,14 +18,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.PIDDriveTrain;
 
-public class BalanceCommand extends CommandBase {
+public class ToggleMotorMode extends CommandBase {
 
     private final PIDDriveTrain m_driveTrain;
-    private double navXoutput;
 
-    public BalanceCommand(PIDDriveTrain subsystem) {
-
-
+    public ToggleMotorMode(PIDDriveTrain subsystem) {
 
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
@@ -41,9 +38,7 @@ public class BalanceCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // m_driveTrain.drive(m_LeftStick.getAsDouble(), m_RightStick.getAsDouble());
-        navXoutput = m_driveTrain.getMeasurement();
-        m_driveTrain.useOutput(navXoutput, 90.0);
+        m_driveTrain.ToggleMotorMode();
     }
 
     // Called once the command ends or is interrupted.

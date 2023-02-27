@@ -12,44 +12,53 @@
 
 package frc.robot.commands;
 
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Robot;
-import frc.robot.subsystems.PIDDriveTrain;
 
-public class BalanceCommand extends CommandBase {
+import frc.robot.subsystems.Grabber;
 
-    private final PIDDriveTrain m_driveTrain;
-    private double navXoutput;
+/**
+ *
+ */
+public class OpenGrabber extends CommandBase {
 
-    public BalanceCommand(PIDDriveTrain subsystem) {
+    private final Grabber m_Grabber;
+    private boolean ButtonX;
+    private boolean ButtonY;
+    private double motorspeed = 0.25;
+    private double motoroff = 0;
 
-
-
-        m_driveTrain = subsystem;
-        addRequirements(m_driveTrain);
+    public OpenGrabber(Grabber subsystem) {
+        m_Grabber = subsystem;
+        addRequirements(m_Grabber);
 
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
+
     public void execute() {
-        // m_driveTrain.drive(m_LeftStick.getAsDouble(), m_RightStick.getAsDouble());
-        navXoutput = m_driveTrain.getMeasurement();
-        m_driveTrain.useOutput(navXoutput, 90.0);
+        m_Grabber.open();
+
     }
+
+    // while xbox button x is pressed
+    // call open
+    // outside of while call grabber stop
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_driveTrain.drive(0, 0);
+        m_Grabber.stop();
     }
 
     // Returns true when the command should end.
@@ -60,8 +69,8 @@ public class BalanceCommand extends CommandBase {
 
     @Override
     public boolean runsWhenDisabled() {
-
         return false;
-
     }
+
 }
+

@@ -57,15 +57,12 @@ public class RobotContainer {
 
   // The robot's subsystems
   public final PIDDriveTrain m_driveTrain = new PIDDriveTrain();
+  public final Winch m_Winch = new Winch();
+  public final Grabber m_Grabber = new Grabber();
 
-  // Joysticks
-  //public final Winch m_Winch = new Winch();
-  //public final Grabber m_Grabber = new Grabber();
-
-  // Joysticks
+  // XboxController
   private final XboxController driver = new XboxController(0);
   private final XboxController operator = new XboxController(1);
-  public CANSparkMax GrabMotor;
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -78,7 +75,8 @@ public class RobotContainer {
 
     // SmartDashboard Buttons
     //SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
-
+    SmartDashboard.putNumber("NavX Roll Value", m_driveTrain.getNavXRoll());
+    SmartDashboard.putString("Motor Mode", m_driveTrain.getMotorMode());
     // Configure the button bindings
     configureButtonBindings();
 
@@ -88,11 +86,10 @@ public class RobotContainer {
 
     //m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
 
-    m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain)); // THIS IS
-                                                                         // IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                                         // DON'T FORGET IT!!!!!!!!!!!!!!!!
+    m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain)); 
+                                                                         
     //m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
-    //m_Grabber.setDefaultCommand(new MoveGrabber(operator, m_Grabber));
+
 
     SmartDashboard.putData("Auto Mode", m_chooser);
   }
@@ -116,7 +113,10 @@ public class RobotContainer {
     // xbutton.onTrue();
     // new JoystickButton(operator, Button.kX.value)
     // .whileTrue(new MoveGrabber(operator,m_Grabber));
-    Trigger aButton = new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new BalanceCommand(m_driveTrain));
+    Trigger aBalance = new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new BalanceCommand(m_driveTrain));
+    Trigger aButton = new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new OpenGrabber(m_Grabber));
+    Trigger bButton = new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new CloseGrabber(m_Grabber));
+    Trigger ToggleMotorMode = new JoystickButton(operator, XboxController.Button.kY.value).onTrue(new ToggleMotorMode(m_driveTrain));
   }
 
   /**
