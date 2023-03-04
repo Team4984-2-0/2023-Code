@@ -95,12 +95,12 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
 
-            leftBackEncoder = leftBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);// 4096 wil need
+            //leftBackEncoder = leftBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);// 4096 wil need
                                                                                                        // to
             // be changed
-            leftFrontEncoder = leftFrontMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-            rightBackEncoder = rightBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-            rightFrontEncoder = rightFrontMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+            //leftFrontEncoder = leftFrontMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+            //rightBackEncoder = rightBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+            //rightFrontEncoder = rightFrontMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
