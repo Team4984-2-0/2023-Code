@@ -14,7 +14,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.PIDDriveTrain;
 
 
 /**
@@ -24,10 +24,10 @@ public class AutonomousCommand extends CommandBase {
 
     private Grabber m_Grabber;
     private Winch m_Winch;
-    private DriveTrain m_DriveTrain;
+    private PIDDriveTrain m_DriveTrain;
 
 
-    public AutonomousCommand(Grabber Grabber_sub, Winch Winch_sub, DriveTrain DriveTrain_sub) {
+    public AutonomousCommand(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
         m_Grabber = Grabber_sub;
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;

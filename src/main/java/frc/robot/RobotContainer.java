@@ -60,16 +60,13 @@ public class RobotContainer {
   private static RobotContainer m_robotContainer = new RobotContainer();
 
   // The robot's subsystems
-  public final DriveTrain m_driveTrain = new DriveTrain();
-
-  // Joysticks
+  public final PIDDriveTrain m_driveTrain = new PIDDriveTrain();
   public final Winch m_Winch = new Winch();
   public final Grabber m_Grabber = new Grabber();
 
-  // Joysticks
+  // XboxController
   private final XboxController driver = new XboxController(0);
   private final XboxController operator = new XboxController(1);
-  public CANSparkMax GrabMotor;
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -81,8 +78,9 @@ public class RobotContainer {
     // Smartdashboard Subsystems
 
     // SmartDashboard Buttons
-    SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
-
+    //SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
+    SmartDashboard.putNumber("NavX Roll Value", m_driveTrain.getNavXRoll());
+    SmartDashboard.putString("Motor Mode", m_driveTrain.getMotorMode());
     // Configure the button bindings
     configureButtonBindings();
 
@@ -90,13 +88,12 @@ public class RobotContainer {
 
     // Configure autonomous sendable chooser
 
-    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
+    //m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
 
-    m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain)); // THIS IS
-                                                                         // IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                                         // DON'T FORGET IT!!!!!!!!!!!!!!!!
-    m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
-    m_Grabber.setDefaultCommand(new MoveGrabber(operator, m_Grabber));
+    m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain)); 
+                                                                         
+    //m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
+
 
     SmartDashboard.putData("Auto Mode", m_chooser);
 
@@ -136,11 +133,6 @@ public class RobotContainer {
     // xbutton.onTrue();
     // new JoystickButton(operator, Button.kX.value)
     // .whileTrue(new MoveGrabber(operator,m_Grabber));
-
-    // Winch ~
-    DigitalInput winchInput = new DigitalInput(0);
-    Trigger winchTrigger = new Trigger(winchInput::get);
-    winchTrigger.onTrue(new WinchStop(m_Winch));
   }
 
   /**

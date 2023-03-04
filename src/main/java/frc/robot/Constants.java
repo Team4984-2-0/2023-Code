@@ -39,4 +39,11 @@ public class Constants {
 
     public static final int CAMERA1_BRIGHTNESS = 50;
     public static final int CAMERA2_BRIGHTNESS = 44;
+    public static final int CANBackLeft = 4;
+    public static final int CANFrontLeft = 3;
+    public static final int CANBackRight = 2;
+    public static final int CANFrontRight = 1;
+    public static final int CANWinch = 5;
+    public static final int CANGrabber = 6;
+
 }
