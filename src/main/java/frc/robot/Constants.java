@@ -46,4 +46,10 @@ public class Constants {
     public static final int CANWinch = 5;
     public static final int CANGrabber = 6;
 
+    //
+    public static final double PIDStop = 0;
+    public static final double PIDSlow = 0.5;
+
+    public static final int PIDCheck = 4096;
+
 }
