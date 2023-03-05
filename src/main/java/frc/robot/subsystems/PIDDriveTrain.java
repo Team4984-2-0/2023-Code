@@ -95,6 +95,12 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
 
+            leftFrontMotor.setIdleMode(IdleMode.kCoast);
+            leftBackMotor.setIdleMode(IdleMode.kCoast);
+            rightFrontMotor.setIdleMode(IdleMode.kCoast);
+            rightBackMotor.setIdleMode(IdleMode.kCoast);
+
+
             //leftBackEncoder = leftBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);// 4096 wil need
                                                                                                        // to
             // be changed
@@ -102,7 +108,6 @@ public class PIDDriveTrain extends PIDSubsystem {
             //rightBackEncoder = rightBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
             //rightFrontEncoder = rightFrontMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
         }
-
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
         addChild("Differential Drive 1", differentialDrive1);
         differentialDrive1.setSafetyEnabled(true);
@@ -164,20 +169,29 @@ public class PIDDriveTrain extends PIDSubsystem {
             System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());
             loopcounter = 0;
         }
-
     }
 
+    
+
     public void setCoastMode() {
+        System.out.println("1");
+        leftFrontMotor.setIdleMode(IdleMode.kCoast);
+        System.out.println("2");
         leftBackMotor.setIdleMode(IdleMode.kCoast);
-        leftBackMotor.setIdleMode(IdleMode.kCoast);
+        System.out.println("3");
         rightFrontMotor.setIdleMode(IdleMode.kCoast);
+        System.out.println("4");
         rightBackMotor.setIdleMode(IdleMode.kCoast);
     }
 
     public void setBrakeMode() {
+        System.out.println("1");
         leftFrontMotor.setIdleMode(IdleMode.kBrake);
+        System.out.println("2");
         leftBackMotor.setIdleMode(IdleMode.kBrake);
+        System.out.println("3");
         rightFrontMotor.setIdleMode(IdleMode.kBrake);
+        System.out.println("4");
         rightBackMotor.setIdleMode(IdleMode.kBrake);
     }
 
@@ -193,8 +207,8 @@ public class PIDDriveTrain extends PIDSubsystem {
             MotorMode = IdleMode.kBrake;
         } else {
             System.out.println("mismatched motor modes setting all motors to coast mode");
-            setCoastMode();
-            MotorMode = IdleMode.kCoast;
+            setBrakeMode();
+            MotorMode = IdleMode.kBrake;
         }
     }
     public double getNavXRoll(){
@@ -218,3 +232,4 @@ public class PIDDriveTrain extends PIDSubsystem {
         }
     }
 }
+
