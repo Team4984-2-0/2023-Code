@@ -34,9 +34,11 @@ public class Grabber extends SubsystemBase {
 private CANSparkMax GrabMotor;
 private DigitalInput grabberSwitch;
 
+
   
     public Grabber() {
         // Create motor
+
 GrabMotor = new CANSparkMax(6,MotorType.kBrushless);
 GrabMotor.setIdleMode(IdleMode.kBrake);
 grabberSwitch = new DigitalInput(1);
@@ -67,19 +69,20 @@ grabberSwitch = new DigitalInput(1);
     {
         // moves the motor
         //Robot.printYellow("Grabber open");
+
         if(grabberSwitch.get()) {
             GrabMotor.set(-0.05);
         }
         else {
             GrabMotor.set(0);
         }
+
     }
     public void close()
     {
         // moves the motor
         //Robot.printYellow("closing grabber");
         GrabMotor.set(0.15);
-
     }
     public void stop( )
     {

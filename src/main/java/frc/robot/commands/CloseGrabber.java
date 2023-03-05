@@ -31,6 +31,8 @@ public class CloseGrabber extends CommandBase {
     private boolean ButtonY;
     private double motorspeed = 1;
     private double motoroff = 0;
+    private double MoveValue;
+    private XboxController xbox;
 
     public CloseGrabber(Grabber subsystem) {
 
@@ -48,7 +50,9 @@ public class CloseGrabber extends CommandBase {
     @Override
 
     public void execute() {
-        m_Grabber.close();
+
+        MoveValue = xbox.getRightX();
+        m_Grabber.close(MoveValue*.25);
 
     }
 

@@ -94,10 +94,13 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushless);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
+
             leftFrontMotor.setIdleMode(IdleMode.kCoast);
             leftBackMotor.setIdleMode(IdleMode.kCoast);
             rightFrontMotor.setIdleMode(IdleMode.kCoast);
             rightBackMotor.setIdleMode(IdleMode.kCoast);
+
+
             //leftBackEncoder = leftBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);// 4096 wil need
                                                                                                        // to
             // be changed
