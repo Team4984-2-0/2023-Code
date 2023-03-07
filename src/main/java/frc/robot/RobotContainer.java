@@ -88,7 +88,7 @@ public class RobotContainer {
 
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain)); 
                                                                          
-    //m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
+    m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
 
 
     SmartDashboard.putData("Auto Mode", m_chooser);
@@ -116,7 +116,7 @@ public class RobotContainer {
     Trigger aBalance = new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new BalanceCommand(m_driveTrain));
     Trigger aButton = new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new OpenGrabber(m_Grabber));
     Trigger bButton = new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new CloseGrabber(m_Grabber));
-    Trigger ToggleMotorMode = new JoystickButton(operator, XboxController.Button.kY.value).onTrue(new ToggleMotorMode(m_driveTrain));
+    //Trigger ToggleMotorMode = new JoystickButton(driver, XboxController.Button.kY.value).toggleOnTrue(new ToggleMotorMode(m_driveTrain));
   }
 
   /**

@@ -23,27 +23,23 @@ import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.DigitalInput;
-
 
  
 public class Grabber extends SubsystemBase {
 
 private CANSparkMax GrabMotor;
-private DigitalInput winchLimitSwitch = new DigitalInput(1);
 private DigitalInput grabberSwitch;
-
 
 
   
     public Grabber() {
         // Create motor
-GrabMotor = new CANSparkMax(6, MotorType.kBrushless);
+
+GrabMotor = new CANSparkMax(6,MotorType.kBrushless);
 GrabMotor.setIdleMode(IdleMode.kBrake);
 grabberSwitch = new DigitalInput(1);
  
@@ -73,33 +69,26 @@ grabberSwitch = new DigitalInput(1);
     {
         // moves the motor
         //Robot.printYellow("Grabber open");
-        if (grabberSwitch.get()) {
+
+        if(grabberSwitch.get()) {
             GrabMotor.set(-0.05);
-            
-        } else {
-            GrabMotor.set(0);
-            
         }
-        
+        else {
+            GrabMotor.set(0);
+        }
 
     }
     public void close()
     {
         // moves the motor
         //Robot.printYellow("closing grabber");
-        GrabMotor.set(-0.25);
+        GrabMotor.set(0.15);
     }
     public void stop( )
     {
         // moves the motor
         //Robot.printYellow("stopping grabber");
         GrabMotor.set(0);
-    }
-
-    public void close(double d) {
-    }
-
-    public void open(double d) {
     }
     
 }
