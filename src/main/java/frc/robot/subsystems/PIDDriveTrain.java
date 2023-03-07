@@ -52,6 +52,10 @@ public class PIDDriveTrain extends PIDSubsystem {
     private static final double kD = 0.0;
     private static final double kF = 1.0;
 
+    // From early encoder class
+    private double desired = 0.0;
+
+    //
     private static final String robottype = "";
 
     // Initialize your subsystem here
@@ -111,7 +115,7 @@ public class PIDDriveTrain extends PIDSubsystem {
 
         // Use these to get going:
         // setSetpoint() - Sets where the PID controller should move the system
-        // to
+        // to 
         // enable() - Enables the PID controller.
 
     }
@@ -215,6 +219,87 @@ public class PIDDriveTrain extends PIDSubsystem {
             return "mismatched motor modes";
 
 
+        }
+    }
+
+    // From the old Encoder class
+
+        // Sets the brake
+        public void setBrake(){
+            leftFrontEncoder.setVelocityConversionFactor(Constants.PIDStop);
+            leftBackEncoder.setVelocityConversionFactor(Constants.PIDStop);
+            rightFrontEncoder.setVelocityConversionFactor(Constants.PIDStop);
+            rightBackEncoder.setVelocityConversionFactor(Constants.PIDStop);
+        }
+    
+        // Releases the brake
+        public void releaseBrake(){
+            
+            leftFrontEncoder.setVelocityConversionFactor(Constants.PIDSlow);
+            leftBackEncoder.setVelocityConversionFactor(Constants.PIDSlow);
+            rightFrontEncoder.setVelocityConversionFactor(Constants.PIDSlow);
+            rightBackEncoder.setVelocityConversionFactor(Constants.PIDSlow);
+        }
+
+        // Goes forward
+        public void forward(double speed){
+            leftFrontEncoder.getPosition();
+            //
+            leftFrontEncoder.setVelocityConversionFactor(speed);
+            leftBackEncoder.setVelocityConversionFactor(speed);
+            rightFrontEncoder.setVelocityConversionFactor(speed);
+            rightBackEncoder.setVelocityConversionFactor(speed);
+            //
+            leftFrontEncoder.setInverted(true);
+            leftBackEncoder.setInverted(true);
+            //
+            rightFrontEncoder.setInverted(false);
+            rightBackEncoder.setInverted(false);
+        }
+    
+        // Goes reverse
+        public void reverse(double speed){
+            leftFrontEncoder.getPosition();
+            //
+            leftFrontEncoder.setVelocityConversionFactor(speed);
+            leftBackEncoder.setVelocityConversionFactor(speed);
+            rightFrontEncoder.setVelocityConversionFactor(speed);
+            rightBackEncoder.setVelocityConversionFactor(speed);
+            //
+            leftFrontEncoder.setInverted(false);
+            leftBackEncoder.setInverted(false);
+            //
+            rightFrontEncoder.setInverted(true);
+            rightBackEncoder.setInverted(true);
+        }
+
+        // Call release brake, forward, and set brake
+    public void forwardMove(double desiredPosition){
+        desired = desiredPosition;
+        leftFrontEncoder.setPosition(0);
+        releaseBrake();
+        forward(Constants.PIDSlow);
+        
+        
+        //setBrake();
+
+    }
+
+    // Call release brake, reverse, and set brake
+    public void reverseMove(double desiredPosition){
+        desired = desiredPosition;
+        leftFrontEncoder.setPosition(0);
+        releaseBrake();
+        reverse(Constants.PIDSlow);
+        
+        
+        //setBrake();
+    }
+
+    // Puts brakes
+    public void checkStop(){
+        if(Math.abs(leftFrontEncoder.getPosition()) >= desired){
+            setBrake();
         }
     }
 }
