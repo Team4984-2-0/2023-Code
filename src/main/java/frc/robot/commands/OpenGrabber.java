@@ -29,9 +29,7 @@ public class OpenGrabber extends CommandBase {
     private final Grabber m_Grabber;
     private boolean ButtonX;
     private boolean ButtonY;
-
-    private double motorspeed = 1;
-
+    private double motorspeed = 0.1;
     private double motoroff = 0;
 
     public OpenGrabber(Grabber subsystem) {
