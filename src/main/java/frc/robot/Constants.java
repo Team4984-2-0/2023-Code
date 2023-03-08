@@ -45,8 +45,6 @@ public class Constants {
     public static final int CANFrontRight = 1;
     public static final int CANWinch = 5;
     public static final int CANGrabber = 6;
-    public static final int CAMERA1_FPS = 10;
-    public static final int CAMERA1_BRIGHTNESS = 50;
     public static boolean robottype = false; 
     
 
