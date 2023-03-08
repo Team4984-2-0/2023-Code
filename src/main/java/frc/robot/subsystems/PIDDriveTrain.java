@@ -72,7 +72,7 @@ public class PIDDriveTrain extends PIDSubsystem {
             m_DriveTrainGyro.reset();
         }
 
-        if (robottype == "testboard") {
+        if (Constants.robottype) {
             // Left Motors
             leftBackMotor = new CANSparkMax(Constants.CANBackLeft, MotorType.kBrushed);
             leftFrontMotor = new CANSparkMax(Constants.CANFrontLeft, MotorType.kBrushed);
@@ -95,12 +95,12 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
 
-            leftBackEncoder = leftBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);// 4096 wil need
+            //leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
                                                                                                        // to
             // be changed
-            leftFrontEncoder = leftFrontMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-            rightBackEncoder = rightBackMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
-            rightFrontEncoder = rightFrontMotor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 4096);
+            //leftFrontEncoder = leftFrontMotor.getEncoder();
+            //rightBackEncoder = rightBackMotor.getEncoder();
+            //rightFrontEncoder = rightFrontMotor.getEncoder();
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);

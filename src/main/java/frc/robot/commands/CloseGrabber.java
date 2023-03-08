@@ -29,8 +29,10 @@ public class CloseGrabber extends CommandBase {
     private final Grabber m_Grabber;
     private boolean ButtonX;
     private boolean ButtonY;
-    private double motorspeed = 0.25;
+    private double motorspeed = 1;
     private double motoroff = 0;
+    private double MoveValue;
+    private XboxController xbox;
 
     public CloseGrabber(Grabber subsystem) {
 

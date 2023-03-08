@@ -41,6 +41,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.subsystems.Grabber;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.cscore.VideoSource;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -74,7 +80,8 @@ public class RobotContainer {
     // Smartdashboard Subsystems
 
     // SmartDashboard Buttons
-    //SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
+    // SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber,
+    // m_Winch, m_driveTrain));
     SmartDashboard.putNumber("NavX Roll Value", m_driveTrain.getNavXRoll());
     SmartDashboard.putString("Motor Mode", m_driveTrain.getMotorMode());
     // Configure the button bindings
@@ -83,15 +90,31 @@ public class RobotContainer {
     // Configure default commands
 
     // Configure autonomous sendable chooser
-
-    //m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
-
-    m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain)); 
-                                                                         
-    //m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
-
+    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
+    m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain));
+    m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
 
     SmartDashboard.putData("Auto Mode", m_chooser);
+    CameraThread myCameraThread = null;
+
+    try {
+      myCameraThread = new CameraThread();
+      CameraServer.getServer("test");
+      // CameraServer.startAutomaticCapture();
+      usbCamera1 = CameraServer.startAutomaticCapture(myCameraThread.CAMERA1);
+      // usbCamera2 = CameraServer.startAutomaticCapture(myCameraThread.CAMERA2);
+      // CameraServer.getServer();
+      myCameraThread.server = CameraServer.getServer();
+      usbCamera1.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+      myCameraThread.setCameraConfig();
+
+      myCameraThread.start();
+      myCameraThread.setResolutionHigh();
+      // myCameraThread.getCameraConfig();
+    } finally {
+      myCameraThread = null;
+    }
+
   }
 
   public static RobotContainer getInstance() {
@@ -113,10 +136,17 @@ public class RobotContainer {
     // xbutton.onTrue();
     // new JoystickButton(operator, Button.kX.value)
     // .whileTrue(new MoveGrabber(operator,m_Grabber));
-    Trigger aBalance = new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new BalanceCommand(m_driveTrain));
-    Trigger aButton = new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new OpenGrabber(m_Grabber));
-    Trigger bButton = new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new CloseGrabber(m_Grabber));
-    Trigger ToggleMotorMode = new JoystickButton(operator, XboxController.Button.kY.value).onTrue(new ToggleMotorMode(m_driveTrain));
+    Trigger aBalance = new JoystickButton(driver, XboxController.Button.kA.value)
+        .whileTrue(new BalanceCommand(m_driveTrain));
+    if (!Constants.robottype) {
+      Trigger aButton = new JoystickButton(operator, XboxController.Button.kA.value)
+          .whileTrue(new OpenGrabber(m_Grabber));
+      Trigger bButton = new JoystickButton(operator, XboxController.Button.kB.value)
+          .whileTrue(new CloseGrabber(m_Grabber));
+    }
+
+    Trigger ToggleMotorMode = new JoystickButton(operator, XboxController.Button.kY.value)
+        .onTrue(new ToggleMotorMode(m_driveTrain));
   }
 
   /**
@@ -132,4 +162,56 @@ public class RobotContainer {
   public class configureButtonBindings {
   }
 
+  public static UsbCamera usbCamera1 = null;
+
+  // public static UsbCamera usbCamera2 = null;
+  public class CameraThread extends Thread {
+    final int CAMERA1 = 0;
+    // final int CAMERA2 = 1;
+    private final int currentCamera = CAMERA1; // UNCOMMENT WHEN RUNNING THE PROGRAM THRU ROBORIO!!!!
+
+    VideoSink server;
+
+    public void run() {
+      System.out.println("CameraThread running");
+
+    }
+
+    public void setResolutionLow() {
+      System.out.println("CameraThread rsetResolutionLow running");
+      usbCamera1.setResolution(150, 150);
+      usbCamera1.setFPS(Constants.CAMERA1_FPS);
+
+    }
+
+    public void setResolutionHigh() {
+      System.out.println("CameraThread rsetResolutionHigh running");
+      usbCamera1.setResolution(150, 150);
+      usbCamera1.setFPS(Constants.CAMERA1_FPS);
+    }
+
+    public void setCameraSource() {
+      System.out.println("CameraThread setCameraSource running");
+      server.setSource(usbCamera1);
+      SmartDashboard.putString("My Key", "Hello");
+    }
+
+    public void getCameraConfig() {
+      System.out.println("CameraThread getPrintCameraConfig running");
+      String cameraConfig;
+      // issue when camera is not plugged in at start
+      cameraConfig = usbCamera1.getConfigJson();
+      if (cameraConfig.isEmpty() == false) {
+        // System.out.println(cameraConfig.toString()); //print to console
+      }
+    }
+
+    public void setCameraConfig() {
+      System.out.println("CameraThread setPrintCameraConfig running");
+
+      usbCamera1.setFPS(Constants.CAMERA1_FPS);
+      usbCamera1.setBrightness(Constants.CAMERA1_BRIGHTNESS);
+      usbCamera1.setExposureAuto();
+    }
+  }
 }
