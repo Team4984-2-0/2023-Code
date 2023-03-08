@@ -43,8 +43,8 @@ public class MoveWinch extends CommandBase {
     @Override
     public void execute() {
         MoveValue = xbox.getLeftY();
-
-        m_Winch.move(MoveValue);
+        
+        m_Winch.move(MoveValue*.25);
     }
 
     // Called once the command ends or is interrupted.

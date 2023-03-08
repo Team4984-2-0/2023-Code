@@ -19,22 +19,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.fasterxml.jackson.annotation.JacksonInject.Value;
-import com.revrobotics.CANSparkMax; 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Grabber extends SubsystemBase {
 
-private TalonSRX GrabMotor;
+    private CANSparkMax GrabMotor;
+    private DigitalInput grabberSwitch;
 
     public Grabber() {
         // Create motor
-GrabMotor = new TalonSRX(Constants.CANGrabber);
- 
+        GrabMotor = new CANSparkMax(6, MotorType.kBrushless);
+        GrabMotor.setIdleMode(IdleMode.kBrake);
+        grabberSwitch = new DigitalInput(1);
+
     }
 
     @Override
@@ -54,22 +59,33 @@ GrabMotor = new TalonSRX(Constants.CANGrabber);
 
     public void open() {
         // moves the motor
-        //Robot.printYellow("Grabber open");
-        GrabMotor.set(ControlMode.PercentOutput, 0.25);
-        
+        // Robot.printYellow("Grabber open");
+        if (grabberSwitch.get()) {
+            GrabMotor.set(-0.05);
+
+        } else {
+            GrabMotor.set(0);
+
+        }
 
     }
 
     public void close() {
         // moves the motor
-        //Robot.printYellow("closing grabber");
-        GrabMotor.set(ControlMode.PercentOutput, -0.25);
+        // Robot.printYellow("closing grabber");
+        GrabMotor.set(0.15);
     }
 
     public void stop() {
         // moves the motor
-        //Robot.printYellow("stopping grabber");
-        GrabMotor.set(ControlMode.PercentOutput, 0);
+        // Robot.printYellow("stopping grabber");
+        GrabMotor.set(0);
+    }
+
+    public void close(double d) {
+    }
+
+    public void open(double d) {
     }
 
 }
