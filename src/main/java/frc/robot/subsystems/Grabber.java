@@ -12,7 +12,6 @@
 
 package frc.robot.subsystems;
 
-
 import frc.robot.Robot;
 import frc.robot.commands.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -30,23 +29,17 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 
-
- 
 public class Grabber extends SubsystemBase {
 
-private CANSparkMax GrabMotor;
-private DigitalInput winchLimitSwitch = new DigitalInput(1);
-private DigitalInput grabberSwitch;
+    private CANSparkMax GrabMotor;
+    private DigitalInput grabberSwitch;
 
-
-
-  
     public Grabber() {
         // Create motor
-GrabMotor = new CANSparkMax(6, MotorType.kBrushless);
-GrabMotor.setIdleMode(IdleMode.kBrake);
-grabberSwitch = new DigitalInput(1);
- 
+        GrabMotor = new CANSparkMax(6, MotorType.kBrushless);
+        GrabMotor.setIdleMode(IdleMode.kBrake);
+        grabberSwitch = new DigitalInput(1);
+
     }
 
     @Override
@@ -64,35 +57,28 @@ grabberSwitch = new DigitalInput(1);
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
-
-
-
-
-    
-    public void open ( )
-    {
+    public void open() {
         // moves the motor
-        //Robot.printYellow("Grabber open");
+        // Robot.printYellow("Grabber open");
         if (grabberSwitch.get()) {
             GrabMotor.set(-0.05);
-            
+
         } else {
             GrabMotor.set(0);
-            
+
         }
-        
 
     }
-    public void close()
-    {
+
+    public void close() {
         // moves the motor
-        //Robot.printYellow("closing grabber");
-        GrabMotor.set(-0.25);
+        // Robot.printYellow("closing grabber");
+        GrabMotor.set(0.15);
     }
-    public void stop( )
-    {
+
+    public void stop() {
         // moves the motor
-        //Robot.printYellow("stopping grabber");
+        // Robot.printYellow("stopping grabber");
         GrabMotor.set(0);
     }
 
@@ -101,6 +87,5 @@ grabberSwitch = new DigitalInput(1);
 
     public void open(double d) {
     }
-    
-}
 
+}

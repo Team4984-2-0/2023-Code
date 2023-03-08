@@ -50,9 +50,7 @@ public class CloseGrabber extends CommandBase {
     @Override
 
     public void execute() {
-
-        MoveValue = xbox.getRightX();
-        m_Grabber.close(MoveValue*.25);
+        m_Grabber.close();
 
     }
 
