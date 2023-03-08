@@ -296,10 +296,12 @@ public class PIDDriveTrain extends PIDSubsystem {
         //setBrake();
     }
 
-    // Puts brakes
-    public void checkStop(){
-        if(Math.abs(leftFrontEncoder.getPosition()) >= desired){
-            setBrake();
+    // Returns true if we have reached our desired position
+    public boolean checkStop(){
+        if(Math.abs(frontLeft.getPosition()) >= desired){
+            return true;
         }
+
+        return false;
     }
 }

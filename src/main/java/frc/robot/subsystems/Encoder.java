@@ -110,10 +110,12 @@ public class Encoder {
         //setBrake();
     }
 
-    // Puts brakes
-    public void checkStop(){
+    // Returns true if we have reached our desired position
+    public boolean checkStop(){
         if(Math.abs(frontLeft.getPosition()) >= desired){
-            setBrake();
+            return true;
         }
+
+        return false;
     }
 }
