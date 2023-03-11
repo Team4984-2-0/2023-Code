@@ -11,51 +11,49 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
-
+import edu.wpi.first.wpilibj.RobotState;
 import frc.robot.Robot;
 
 import frc.robot.subsystems.Winch;
 
 public class MoveWinch extends CommandBase {
 
-    
     private final Winch m_Winch;
     private double MoveValue;
     private XboxController xbox;
 
-
-
     public MoveWinch(XboxController Controller, Winch subsystem) {
-
 
         xbox = Controller;
 
-         m_Winch = subsystem;
+        m_Winch = subsystem;
         addRequirements(m_Winch);
-
 
     }
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {   
+    public void initialize() {
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        MoveValue = xbox.getLeftY();
-        
-        m_Winch.move(MoveValue*.25);
+        if (RobotState.isTeleop()) {
+            MoveValue = xbox.getLeftY();
+            m_Winch.move(MoveValue * .25);
+        }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_Winch.move(0);
+        if (RobotState.isTeleop()) {
+            m_Winch.move(0);
+        }
     }
 
     // Returns true when the command should end.

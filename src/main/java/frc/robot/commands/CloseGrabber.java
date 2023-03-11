@@ -13,7 +13,7 @@
 package frc.robot.commands;
 
 import com.fasterxml.jackson.annotation.JacksonInject.Value;
-
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -50,8 +50,9 @@ public class CloseGrabber extends CommandBase {
     @Override
 
     public void execute() {
-        m_Grabber.close();
-
+        if (RobotState.isTeleop()) {
+            m_Grabber.close();
+        }
     }
 
     // while xbox button x is pressed
@@ -61,7 +62,9 @@ public class CloseGrabber extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_Grabber.stop();
+        if (RobotState.isTeleop()) {
+            m_Grabber.stop();
+        }
     }
 
     // Returns true when the command should end.

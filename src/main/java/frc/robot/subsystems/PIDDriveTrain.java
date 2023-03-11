@@ -171,7 +171,7 @@ public class PIDDriveTrain extends PIDSubsystem {
             leftDrive = 0.0;
 
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
-
+        System.out.println("LeftDrive: " + leftDrive + "RightDrive: " + rightDrive);
         loopcounter++;
         if (loopcounter > 3) {
             //System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());
