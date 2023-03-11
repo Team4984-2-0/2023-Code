@@ -14,6 +14,7 @@ package frc.robot.commands;
 import java.util.concurrent.TimeUnit;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -63,7 +64,7 @@ public class AutonomousCommand extends CommandBase {
         //System.out.println("Autonomous 3");
         //m_DriveTrain.drive(0, 0);
         //System.out.println("Autonomous 4 counter = " + sleepCounter);
-        //sleepCounter ++;
+        sleepCounter ++;
     }
 
     // Called once the command ends or is interrupted.
@@ -74,9 +75,8 @@ public class AutonomousCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
-        /* 
-        if (sleepCounter > 30)
+         
+        if (sleepCounter > Constants.sleepCounterConstant)
         {
             m_DriveTrain.drive(0, 0);
             return true;
@@ -84,7 +84,7 @@ public class AutonomousCommand extends CommandBase {
         else 
             return false;
 
-*/
+
     }
 
     @Override

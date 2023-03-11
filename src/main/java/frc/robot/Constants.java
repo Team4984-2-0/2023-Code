@@ -33,6 +33,7 @@ public class Constants {
     public static final int CAMERA1_FPS = 10;
     public static final int CAMERA1_BRIGHTNESS = 50;
     public static boolean robottype = false; 
+    public static int sleepCounterConstant = 60;
     
 
 }
