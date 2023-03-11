@@ -83,6 +83,12 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushed);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
+
+            leftFrontMotor.setOpenLoopRampRate(0.8);
+            leftBackMotor.setOpenLoopRampRate(0.8);
+            rightFrontMotor.setOpenLoopRampRate(0.8);
+            rightBackMotor.setOpenLoopRampRate(0.8);
+        
         } else {
             // Left Motors
             leftBackMotor = new CANSparkMax(Constants.CANBackLeft, MotorType.kBrushless);
@@ -94,13 +100,18 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushless);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
+            
+            leftFrontMotor.setOpenLoopRampRate(0.8);
+            leftBackMotor.setOpenLoopRampRate(0.8);
+            rightFrontMotor.setOpenLoopRampRate(0.8);
+            rightBackMotor.setOpenLoopRampRate(0.8);
 
-            //leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
-                                                                                                       // to
+            // leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
+            // to
             // be changed
-            //leftFrontEncoder = leftFrontMotor.getEncoder();
-            //rightBackEncoder = rightBackMotor.getEncoder();
-            //rightFrontEncoder = rightFrontMotor.getEncoder();
+            // leftFrontEncoder = leftFrontMotor.getEncoder();
+            // rightBackEncoder = rightBackMotor.getEncoder();
+            // rightFrontEncoder = rightFrontMotor.getEncoder();
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
@@ -154,21 +165,26 @@ public class PIDDriveTrain extends PIDSubsystem {
     // here. Call these from Commands.
 
     public void drive(double leftDrive, double rightDrive) {
+        if (Math.abs(rightDrive) < 0.08)
+            rightDrive = 0.0;
+        if (Math.abs(leftDrive) < 0.08)
+            leftDrive = 0.0;
 
-        // Robot.printYellow(leftDrive + "," + rightDrive);
-        // System.out.println(leftDrive + "," + rightDrive);
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
 
         loopcounter++;
         if (loopcounter > 3) {
-            System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());
+            //System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());
             loopcounter = 0;
+
+            // Robot.printYellow(leftDrive + "," + rightDrive);
+            //System.out.println(leftDrive + "," + rightDrive);
         }
 
     }
 
     public void setCoastMode() {
-        leftBackMotor.setIdleMode(IdleMode.kCoast);
+        leftFrontMotor.setIdleMode(IdleMode.kCoast);
         leftBackMotor.setIdleMode(IdleMode.kCoast);
         rightFrontMotor.setIdleMode(IdleMode.kCoast);
         rightBackMotor.setIdleMode(IdleMode.kCoast);
@@ -182,38 +198,43 @@ public class PIDDriveTrain extends PIDSubsystem {
     }
 
     public void ToggleMotorMode() {
+        setBrakeMode();
 
-        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake)
-         {
-            setCoastMode();
-            MotorMode = IdleMode.kCoast;
-        }
-        else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
-            setBrakeMode();
-            MotorMode = IdleMode.kBrake;
-        } else {
-            System.out.println("mismatched motor modes setting all motors to coast mode");
-            setCoastMode();
-            MotorMode = IdleMode.kCoast;
-        }
+        /*
+         * if (leftFrontMotor.getIdleMode() == IdleMode.kBrake &&
+         * rightFrontMotor.getIdleMode() == IdleMode.kBrake)
+         * {
+         * setCoastMode();
+         * MotorMode = IdleMode.kCoast;
+         * }
+         * else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast &&
+         * rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
+         * setBrakeMode();
+         * MotorMode = IdleMode.kBrake;
+         * } else {
+         * System.out.println("mismatched motor modes setting all motors to coast mode"
+         * );
+         * setCoastMode();
+         * MotorMode = IdleMode.kCoast;
+         * }
+         */
     }
-    public double getNavXRoll(){
+
+    public double getNavXRoll() {
         return m_DriveTrainGyro.getRoll();
     }
-    
+
     public String getMotorMode() {
 
-        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake)
-         {
+        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake) {
             return "Brake Mode Enabled";
 
-        }
-        else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
+        } else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast
+                && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
             return "Coast Mode Enabled";
 
         } else {
             return "mismatched motor modes";
-
 
         }
     }

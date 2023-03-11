@@ -18,11 +18,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.PIDDriveTrain;
 
-public class ToggleMotorMode extends CommandBase {
+public class SetCoastMode extends CommandBase {
 
     private final PIDDriveTrain m_driveTrain;
 
-    public ToggleMotorMode(PIDDriveTrain subsystem) {
+    public SetCoastMode(PIDDriveTrain subsystem) {
 
         m_driveTrain = subsystem;
         addRequirements(m_driveTrain);
@@ -38,7 +38,7 @@ public class ToggleMotorMode extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_driveTrain.setBrakeMode();
+        m_driveTrain.setCoastMode();
     }
 
     // Called once the command ends or is interrupted.

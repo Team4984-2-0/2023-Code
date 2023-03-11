@@ -90,7 +90,8 @@ public class RobotContainer {
     // Configure default commands
 
     // Configure autonomous sendable chooser
-    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
+    m_chooser.setDefaultOption("Autonomous Command", new
+    AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));   
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain));
     m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
 
@@ -145,8 +146,10 @@ public class RobotContainer {
           .whileTrue(new CloseGrabber(m_Grabber));
     }
 
-    Trigger ToggleMotorMode = new JoystickButton(operator, XboxController.Button.kY.value)
+    Trigger ToggleMotorMode = new JoystickButton(driver, XboxController.Button.kY.value)
         .onTrue(new ToggleMotorMode(m_driveTrain));
+    Trigger SetCoastMode = new JoystickButton(driver, XboxController.Button.kX.value)
+        .onTrue(new SetCoastMode(m_driveTrain));
   }
 
   /**

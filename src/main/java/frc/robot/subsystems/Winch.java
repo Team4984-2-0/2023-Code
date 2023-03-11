@@ -55,21 +55,21 @@ public class Winch extends SubsystemBase {
 
     public void move(double Value) {
         if (winchlimitSwitch.get() && Value < 0) {
-            System.out.println("1");
+            //System.out.println("1");
             winchMotor.set(Value);
         } else if (winchlimitSwitch.get() && Value > 0) {
-            System.out.println("2");
+            //System.out.println("2");
             winchMotor.set(Value);
         } else if (winchlimitSwitch.get() == false && Value > 0) {
-            System.out.println("3");
+            //System.out.println("3");
             winchMotor.set(Value);
         } else {
             winchMotor.set(0.01);
-            System.out.println("else");
+            //System.out.println("else");
         }
 
         // moves the motor
-        System.out.println("Limit Switch: " + winchlimitSwitch.get());
+        //System.out.println("Limit Switch: " + winchlimitSwitch.get());
 
         // Robot.printYellow(Double.toString(Value));
 

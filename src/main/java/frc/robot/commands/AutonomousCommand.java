@@ -11,26 +11,30 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands;
+import java.util.concurrent.TimeUnit;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.PIDDriveTrain;
+import java.util.concurrent.TimeUnit;
 
 
-/**
- *
- */
+
+ 
 public class AutonomousCommand extends CommandBase {
 
     private Grabber m_Grabber;
     private Winch m_Winch;
     private PIDDriveTrain m_DriveTrain;
+    private int sleepCounter;
 
 
     public AutonomousCommand(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
         m_Grabber = Grabber_sub;
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
+        sleepCounter = 0;
 
     }
 
@@ -52,16 +56,14 @@ public class AutonomousCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_DriveTrain.drive(0.5, 0.5);
-        wait(1000);
-        m_DriveTrain.drive(0, 0);
-
-
-
-
-
-
-
+        //System.out.println("Autonomous 1");
+        m_DriveTrain.drive(-0.5, -0.5);
+        //System.out.println("Autonomous 2");
+       
+        //System.out.println("Autonomous 3");
+        //m_DriveTrain.drive(0, 0);
+        //System.out.println("Autonomous 4 counter = " + sleepCounter);
+        //sleepCounter ++;
     }
 
     // Called once the command ends or is interrupted.
@@ -73,6 +75,16 @@ public class AutonomousCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         return false;
+        /* 
+        if (sleepCounter > 30)
+        {
+            m_DriveTrain.drive(0, 0);
+            return true;
+        }
+        else 
+            return false;
+
+*/
     }
 
     @Override
