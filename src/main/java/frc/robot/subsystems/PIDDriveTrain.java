@@ -26,6 +26,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 
@@ -45,6 +47,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private RelativeEncoder rightBackEncoder;
     private RelativeEncoder rightFrontEncoder;
     private IdleMode MotorMode;
+    private double groundincline;
 
     // P I D Variables
     private static final double kP = 1.0;
@@ -119,6 +122,8 @@ public class PIDDriveTrain extends PIDSubsystem {
         differentialDrive1.setSafetyEnabled(true);
         differentialDrive1.setExpiration(0.1);
         differentialDrive1.setMaxOutput(1.0);
+        waitfornavx();
+        groundincline = m_DriveTrainGyro.getRoll();
 
         // Use these to get going:
         // setSetpoint() - Sets where the PID controller should move the system
@@ -131,7 +136,8 @@ public class PIDDriveTrain extends PIDSubsystem {
     public void periodic() {
         // This method will be called once per scheduler run
         super.periodic();
-
+        SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
+        SmartDashboard.putString("Motor Mode",getMotorMode());
     }
 
     @Override
@@ -237,5 +243,14 @@ public class PIDDriveTrain extends PIDSubsystem {
             return "mismatched motor modes";
 
         }
+    }
+    private void waitfornavx(){
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    
     }
 }

@@ -25,17 +25,18 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 
 public class Winch extends SubsystemBase {
 
     private CANSparkMax winchMotor;
     private DigitalInput winchlimitSwitch;
-
+    private Servo armservo;
     public Winch() {
         // Create motor
         winchlimitSwitch = new DigitalInput(0);
         winchMotor = new CANSparkMax(Constants.CANWinch, MotorType.kBrushless);
-
+        armservo = new Servo(0);
     }
 
     @Override
@@ -74,5 +75,8 @@ public class Winch extends SubsystemBase {
         // Robot.printYellow(Double.toString(Value));
 
     }
-
+    public void moveservo() {
+        armservo.setAngle(180);
+        
+    }
 }

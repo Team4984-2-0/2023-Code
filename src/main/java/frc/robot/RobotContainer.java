@@ -82,8 +82,8 @@ public class RobotContainer {
     // SmartDashboard Buttons
     // SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber,
     // m_Winch, m_driveTrain));
-    SmartDashboard.putNumber("NavX Roll Value", m_driveTrain.getNavXRoll());
-    SmartDashboard.putString("Motor Mode", m_driveTrain.getMotorMode());
+   // SmartDashboard.putNumber("NavX Roll Value", m_driveTrain.getNavXRoll());
+   // SmartDashboard.putString("Motor Mode", m_driveTrain.getMotorMode());
     // Configure the button bindings
     configureButtonBindings();
 
