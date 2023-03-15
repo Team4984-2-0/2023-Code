@@ -11,7 +11,10 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -31,6 +34,8 @@ public class AutonomousCommand extends CommandBase {
         m_Grabber = Grabber_sub;
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
+
+        SmartDashboard.getData("Auto Mode");
 
     }
 
@@ -52,9 +57,22 @@ public class AutonomousCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_DriveTrain.drive(0.5, 0.5);
-        wait(1000);
-        m_DriveTrain.drive(0, 0);
+
+        String testAutoData = SmartDashboard.getString("Auto mode", "none");
+        // Not done yet
+        try{
+            switch(testAutoData){
+                default:
+                    Robot.printYellow("Nothing special.");
+                    m_DriveTrain.drive(0.5, 0.5);
+                    wait(1000);
+                    m_DriveTrain.drive(0, 0);
+                    break;
+            }
+        }
+        catch(IllegalArgumentException e){
+            Robot.printYellow("Something went wrong trying to run autonomous.");
+        }
 
 
 

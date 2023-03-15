@@ -298,7 +298,7 @@ public class PIDDriveTrain extends PIDSubsystem {
 
     // Returns true if we have reached our desired position
     public boolean checkStop(){
-        if(Math.abs(frontLeft.getPosition()) >= desired){
+        if(Math.abs(leftFrontEncoder.getPosition()) >= desired){
             return true;
         }
 
