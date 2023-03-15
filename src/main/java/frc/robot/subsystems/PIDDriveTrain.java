@@ -26,6 +26,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 
@@ -40,11 +42,14 @@ public class PIDDriveTrain extends PIDSubsystem {
     private MotorControllerGroup rightMotors;
     private DifferentialDrive differentialDrive1;
     private int loopcounter;
-    private RelativeEncoder leftBackEncoder;
-    private RelativeEncoder leftFrontEncoder;
-    private RelativeEncoder rightBackEncoder;
-    private RelativeEncoder rightFrontEncoder;
+    public RelativeEncoder leftBackEncoder;
+    public RelativeEncoder leftFrontEncoder;
+    public RelativeEncoder rightBackEncoder;
+    public RelativeEncoder rightFrontEncoder;
     private IdleMode MotorMode;
+    private double navX_level;
+    private double navX_heading;
+    private double navX_yaw;
 
     // P I D Variables
     private static final double kP = 1.0;
@@ -72,6 +77,16 @@ public class PIDDriveTrain extends PIDSubsystem {
             m_DriveTrainGyro.reset();
         }
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        // i believe we needed this wait to let the navx boot properly
+        navX_level = m_DriveTrainGyro.getRoll();
+        navX_heading = m_DriveTrainGyro.getCompassHeading();
+        navX_yaw = m_DriveTrainGyro.getYaw();
+
         if (Constants.robottype) {
             // Left Motors
             leftBackMotor = new CANSparkMax(Constants.CANBackLeft, MotorType.kBrushed);
@@ -95,12 +110,20 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
 
+<<<<<<< Updated upstream
             //leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
                                                                                                        // to
             // be changed
             //leftFrontEncoder = leftFrontMotor.getEncoder();
             //rightBackEncoder = rightBackMotor.getEncoder();
             //rightFrontEncoder = rightFrontMotor.getEncoder();
+=======
+            leftBackEncoder = leftBackMotor.getEncoder();
+            leftFrontEncoder = leftFrontMotor.getEncoder();
+            rightBackEncoder = rightBackMotor.getEncoder();
+            rightFrontEncoder = rightFrontMotor.getEncoder();
+
+>>>>>>> Stashed changes
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
@@ -121,12 +144,34 @@ public class PIDDriveTrain extends PIDSubsystem {
         // This method will be called once per scheduler run
         super.periodic();
 
+        SmartDashboard.putNumber("Encoder Position: Left Back", leftBackEncoder.getPosition());
+        SmartDashboard.putNumber("Encoder Position: Left Front", leftFrontEncoder.getPosition());
+        SmartDashboard.putNumber("Encoder Position: Right Back", rightBackEncoder.getPosition());
+        SmartDashboard.putNumber("Encoder Position: Right Front", rightFrontEncoder.getPosition());
+
+        SmartDashboard.putNumber("Encoder Velocity: Left Back", leftBackEncoder.getVelocity());
+        SmartDashboard.putNumber("Encoder Velocity: Left Front", leftFrontEncoder.getVelocity());
+        SmartDashboard.putNumber("Encoder Velocity: Right Back", rightBackEncoder.getVelocity());
+        SmartDashboard.putNumber("Encoder Velocity: Right Front", rightFrontEncoder.getVelocity());
+
     }
 
     @Override
     public double getMeasurement() {
 
         return m_DriveTrainGyro.getPitch();
+    }
+
+    public double getLevel(){
+        return navX_level;
+    }
+
+    public double getHeading(){
+        return navX_heading;
+    }
+
+    public double getYaw(){
+        return navX_yaw;
     }
 
     @Override

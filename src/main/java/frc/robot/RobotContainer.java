@@ -21,9 +21,8 @@ import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.TankDrive;
-import frc.robot.commands.MoveWinch;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -65,6 +64,7 @@ public class RobotContainer {
   public final PIDDriveTrain m_driveTrain = new PIDDriveTrain();
   public final Winch m_Winch = new Winch();
   public final Grabber m_Grabber = new Grabber();
+  public final Servo m_Dropper = new Servo(1);
 
   // XboxController
   private final XboxController driver = new XboxController(0);
@@ -93,11 +93,12 @@ public class RobotContainer {
     m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain));
     m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
+    m_chooser.addOption("Autonomous Command 2", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain, m_Dropper));
 
     SmartDashboard.putData("Auto Mode", m_chooser);
     CameraThread myCameraThread = null;
 
-    try {
+   /*  try {
       myCameraThread = new CameraThread();
       CameraServer.getServer("test");
       // CameraServer.startAutomaticCapture();
@@ -114,8 +115,8 @@ public class RobotContainer {
     } finally {
       myCameraThread = null;
     }
-
-  }
+*/
+  } 
 
   public static RobotContainer getInstance() {
     return m_robotContainer;
