@@ -84,10 +84,10 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
 
-            leftFrontMotor.setOpenLoopRampRate(0.8);
-            leftBackMotor.setOpenLoopRampRate(0.8);
-            rightFrontMotor.setOpenLoopRampRate(0.8);
-            rightBackMotor.setOpenLoopRampRate(0.8);
+            leftFrontMotor.setOpenLoopRampRate(0);
+            leftBackMotor.setOpenLoopRampRate(0);
+            rightFrontMotor.setOpenLoopRampRate(0);
+            rightBackMotor.setOpenLoopRampRate(0);
         
         } else {
             // Left Motors
@@ -101,10 +101,10 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
             
-            leftFrontMotor.setOpenLoopRampRate(0.8);
-            leftBackMotor.setOpenLoopRampRate(0.8);
-            rightFrontMotor.setOpenLoopRampRate(0.8);
-            rightBackMotor.setOpenLoopRampRate(0.8);
+            leftFrontMotor.setOpenLoopRampRate(0);
+            leftBackMotor.setOpenLoopRampRate(0);
+            rightFrontMotor.setOpenLoopRampRate(0);
+            rightBackMotor.setOpenLoopRampRate(0);
 
             // leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
             // to
@@ -171,7 +171,7 @@ public class PIDDriveTrain extends PIDSubsystem {
             leftDrive = 0.0;
 
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
-        System.out.println("LeftDrive: " + leftDrive + "RightDrive: " + rightDrive);
+        //System.out.println("LeftDrive: " + leftDrive + "RightDrive: " + rightDrive);
         loopcounter++;
         if (loopcounter > 3) {
             //System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());

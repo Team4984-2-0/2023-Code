@@ -58,9 +58,15 @@ public class AutonomousCommand extends CommandBase {
     @Override
     public void execute() {
         //System.out.println("Autonomous 1");
-        m_DriveTrain.drive(-0.5, -0.5);
+        //if(sleepCounter < 40){
+            m_DriveTrain.drive(0.65, 0.65);
+            // Drive forward
+        //}
+        //else if(sleepCounter < 60){
+            
+        //}
         //System.out.println("Autonomous 2");
-       
+    
         //System.out.println("Autonomous 3");
         //m_DriveTrain.drive(0, 0);
         //System.out.println("Autonomous 4 counter = " + sleepCounter);
@@ -79,6 +85,7 @@ public class AutonomousCommand extends CommandBase {
         if (sleepCounter > Constants.sleepCounterConstant)
         {
             m_DriveTrain.drive(0, 0);
+            sleepCounter = 0;
             return true;
         }
         else 
