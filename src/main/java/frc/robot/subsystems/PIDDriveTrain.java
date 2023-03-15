@@ -110,20 +110,19 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
 
-<<<<<<< Updated upstream
             //leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
                                                                                                        // to
             // be changed
             //leftFrontEncoder = leftFrontMotor.getEncoder();
             //rightBackEncoder = rightBackMotor.getEncoder();
             //rightFrontEncoder = rightFrontMotor.getEncoder();
-=======
+
             leftBackEncoder = leftBackMotor.getEncoder();
             leftFrontEncoder = leftFrontMotor.getEncoder();
             rightBackEncoder = rightBackMotor.getEncoder();
             rightFrontEncoder = rightFrontMotor.getEncoder();
 
->>>>>>> Stashed changes
+
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
