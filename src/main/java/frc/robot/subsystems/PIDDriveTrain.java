@@ -113,12 +113,12 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor.setOpenLoopRampRate(0);
             rightBackMotor.setOpenLoopRampRate(0);
 
-            // leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
+            leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
             // to
             // be changed
-            // leftFrontEncoder = leftFrontMotor.getEncoder();
-            // rightBackEncoder = rightBackMotor.getEncoder();
-            // rightFrontEncoder = rightFrontMotor.getEncoder();
+            leftFrontEncoder = leftFrontMotor.getEncoder();
+            rightBackEncoder = rightBackMotor.getEncoder();
+            rightFrontEncoder = rightFrontMotor.getEncoder();
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);

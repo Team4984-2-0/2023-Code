@@ -37,7 +37,7 @@ public class AutonomousCommand extends CommandBase {
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
 
-        SmartDashboard.getData("Auto Mode");
+        //SmartDashboard.getData("Auto Mode");
 
     }
 
@@ -47,14 +47,14 @@ public class AutonomousCommand extends CommandBase {
     }
 
     // Wait for a certain amount of time, easier to use this rather than repeating the try/catch
-    private void wait(int timeInMS){
+    /*private void wait(int timeInMS){
         try {
             Thread.sleep(timeInMS);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
+    }*/
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -67,7 +67,7 @@ public class AutonomousCommand extends CommandBase {
                 default:
                     Robot.printYellow("Nothing special.");
                     m_DriveTrain.drive(0.5, 0.5);
-                    wait(1000);
+                    //wait(1000);
                     m_DriveTrain.drive(0, 0);
                     break;
             }
