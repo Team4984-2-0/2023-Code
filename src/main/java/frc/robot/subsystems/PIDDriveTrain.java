@@ -18,7 +18,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants;
-
+import frc.robot.Robot;
 import edu.wpi.first.wpilibj.SPI;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -191,6 +191,8 @@ public class PIDDriveTrain extends PIDSubsystem {
             //System.out.println(leftDrive + "," + rightDrive);
         }
 
+        Robot.printYellow("Encooders: \n" + getLeftFrontEncoder() + " - LF\n" + getLeftBackEncoder() + " - LB\n" + getRightFrontEncoder() + " - RF\n"+getRightBackEncoder() + " - RB");
+
     }
 
     public void setCoastMode() {
@@ -325,11 +327,12 @@ public class PIDDriveTrain extends PIDSubsystem {
 
     // Returns true if we have reached our desired position
     public boolean checkStop(){
-        if(Math.abs(leftFrontEncoder.getPosition()) >= desired){
+        if(Math.abs(getLeftFrontEncoder()) >= desired){
             return true;
         }
 
-        return false;}
+        return false;
+    }
     private void waitfornavx(){
         try {
             Thread.sleep(600);
@@ -338,5 +341,19 @@ public class PIDDriveTrain extends PIDSubsystem {
             e.printStackTrace();
         }
     
+    }
+
+    // Encoder getters
+    public double getLeftFrontEncoder(){
+        return leftFrontEncoder.getPosition();
+    }
+    public double getRightFrontEncoder(){
+        return rightFrontEncoder.getPosition();
+    }
+    public double getLeftBackEncoder(){
+        return leftBackEncoder.getPosition();
+    }
+    public double getRightBackEncoder(){
+        return rightBackEncoder.getPosition();
     }
 }
