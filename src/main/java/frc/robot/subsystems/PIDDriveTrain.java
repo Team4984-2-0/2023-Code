@@ -26,6 +26,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 
@@ -45,6 +47,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private RelativeEncoder rightBackEncoder;
     private RelativeEncoder rightFrontEncoder;
     private IdleMode MotorMode;
+    private double groundincline;
 
     // P I D Variables
     private static final double kP = 1.0;
@@ -87,6 +90,12 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushed);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
+
+            leftFrontMotor.setOpenLoopRampRate(0);
+            leftBackMotor.setOpenLoopRampRate(0);
+            rightFrontMotor.setOpenLoopRampRate(0);
+            rightBackMotor.setOpenLoopRampRate(0);
+        
         } else {
             // Left Motors
             leftBackMotor = new CANSparkMax(Constants.CANBackLeft, MotorType.kBrushless);
@@ -98,13 +107,18 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushless);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
+            
+            leftFrontMotor.setOpenLoopRampRate(0);
+            leftBackMotor.setOpenLoopRampRate(0);
+            rightFrontMotor.setOpenLoopRampRate(0);
+            rightBackMotor.setOpenLoopRampRate(0);
 
-            //leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
-                                                                                                       // to
+            // leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
+            // to
             // be changed
-            //leftFrontEncoder = leftFrontMotor.getEncoder();
-            //rightBackEncoder = rightBackMotor.getEncoder();
-            //rightFrontEncoder = rightFrontMotor.getEncoder();
+            // leftFrontEncoder = leftFrontMotor.getEncoder();
+            // rightBackEncoder = rightBackMotor.getEncoder();
+            // rightFrontEncoder = rightFrontMotor.getEncoder();
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
@@ -112,6 +126,8 @@ public class PIDDriveTrain extends PIDSubsystem {
         differentialDrive1.setSafetyEnabled(true);
         differentialDrive1.setExpiration(0.1);
         differentialDrive1.setMaxOutput(1.0);
+        waitfornavx();
+        groundincline = m_DriveTrainGyro.getRoll();
 
         // Use these to get going:
         // setSetpoint() - Sets where the PID controller should move the system
@@ -124,7 +140,8 @@ public class PIDDriveTrain extends PIDSubsystem {
     public void periodic() {
         // This method will be called once per scheduler run
         super.periodic();
-
+        SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
+        SmartDashboard.putString("Motor Mode",getMotorMode());
     }
 
     @Override
@@ -158,21 +175,26 @@ public class PIDDriveTrain extends PIDSubsystem {
     // here. Call these from Commands.
 
     public void drive(double leftDrive, double rightDrive) {
+        if (Math.abs(rightDrive) < 0.08)
+            rightDrive = 0.0;
+        if (Math.abs(leftDrive) < 0.08)
+            leftDrive = 0.0;
 
-        // Robot.printYellow(leftDrive + "," + rightDrive);
-        // System.out.println(leftDrive + "," + rightDrive);
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
-
+        //System.out.println("LeftDrive: " + leftDrive + "RightDrive: " + rightDrive);
         loopcounter++;
         if (loopcounter > 3) {
-            System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());
+            //System.out.println("DriveTrain pitch = " + m_DriveTrainGyro.getPitch());
             loopcounter = 0;
+
+            // Robot.printYellow(leftDrive + "," + rightDrive);
+            //System.out.println(leftDrive + "," + rightDrive);
         }
 
     }
 
     public void setCoastMode() {
-        leftBackMotor.setIdleMode(IdleMode.kCoast);
+        leftFrontMotor.setIdleMode(IdleMode.kCoast);
         leftBackMotor.setIdleMode(IdleMode.kCoast);
         rightFrontMotor.setIdleMode(IdleMode.kCoast);
         rightBackMotor.setIdleMode(IdleMode.kCoast);
@@ -186,38 +208,43 @@ public class PIDDriveTrain extends PIDSubsystem {
     }
 
     public void ToggleMotorMode() {
+        setBrakeMode();
 
-        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake)
-         {
-            setCoastMode();
-            MotorMode = IdleMode.kCoast;
-        }
-        else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
-            setBrakeMode();
-            MotorMode = IdleMode.kBrake;
-        } else {
-            System.out.println("mismatched motor modes setting all motors to coast mode");
-            setCoastMode();
-            MotorMode = IdleMode.kCoast;
-        }
+        /*
+         * if (leftFrontMotor.getIdleMode() == IdleMode.kBrake &&
+         * rightFrontMotor.getIdleMode() == IdleMode.kBrake)
+         * {
+         * setCoastMode();
+         * MotorMode = IdleMode.kCoast;
+         * }
+         * else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast &&
+         * rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
+         * setBrakeMode();
+         * MotorMode = IdleMode.kBrake;
+         * } else {
+         * System.out.println("mismatched motor modes setting all motors to coast mode"
+         * );
+         * setCoastMode();
+         * MotorMode = IdleMode.kCoast;
+         * }
+         */
     }
-    public double getNavXRoll(){
+
+    public double getNavXRoll() {
         return m_DriveTrainGyro.getRoll();
     }
-    
+
     public String getMotorMode() {
 
-        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake)
-         {
+        if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake) {
             return "Brake Mode Enabled";
 
-        }
-        else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
+        } else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast
+                && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
             return "Coast Mode Enabled";
 
         } else {
             return "mismatched motor modes";
-
 
         }
     }
@@ -302,6 +329,14 @@ public class PIDDriveTrain extends PIDSubsystem {
             return true;
         }
 
-        return false;
+        return false;}
+    private void waitfornavx(){
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    
     }
 }

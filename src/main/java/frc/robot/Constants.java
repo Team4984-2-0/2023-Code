@@ -46,6 +46,7 @@ public class Constants {
     public static final int CANWinch = 5;
     public static final int CANGrabber = 6;
     public static boolean robottype = false; 
+    public static int sleepCounterConstant = 65;
     
 
     //

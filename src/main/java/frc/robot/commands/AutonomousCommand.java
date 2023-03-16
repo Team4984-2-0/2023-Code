@@ -11,29 +11,28 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.PIDDriveTrain;
+import java.util.concurrent.TimeUnit;
 
 
-/**
- *
- */
+
+ 
 public class AutonomousCommand extends CommandBase {
 
     private Grabber m_Grabber;
     private Winch m_Winch;
     private PIDDriveTrain m_DriveTrain;
+    private int sleepCounter;
 
 
     public AutonomousCommand(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
         m_Grabber = Grabber_sub;
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
+        sleepCounter = 0;
 
         SmartDashboard.getData("Auto Mode");
 
@@ -90,7 +89,17 @@ public class AutonomousCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+         
+        if (sleepCounter > Constants.sleepCounterConstant)
+        {
+            m_DriveTrain.drive(0, 0);
+            sleepCounter = 0;
+            return true;
+        }
+        else 
+            return false;
+
+
     }
 
     @Override
