@@ -201,7 +201,7 @@ public class PIDDriveTrain extends PIDSubsystem {
             //System.out.println(leftDrive + "," + rightDrive);
         }
 
-        Robot.printYellow("Encooders: \n" + getLeftFrontEncoder() + " - LF\n" + getLeftBackEncoder() + " - LB\n" + getRightFrontEncoder() + " - RF\n"+getRightBackEncoder() + " - RB");
+        //Robot.printYellow("Encooders: \n" + getLeftFrontEncoder() + " - LF\n" + getLeftBackEncoder() + " - LB\n" + getRightFrontEncoder() + " - RF\n"+getRightBackEncoder() + " - RB");
 
     }
 
