@@ -36,6 +36,7 @@ public class AutonomousCommand2 extends CommandBase {
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
+        m_DriveTrain.setBrakeMode();
 
     }
 
@@ -57,22 +58,23 @@ public class AutonomousCommand2 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        //m_Winch.moveservo();
-        // needs wait
-        //m_Grabber.open();
-        // needs wait
-        while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
-            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
-            m_DriveTrain.drive(-0.65,0.65);
-            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
-            //System.out.println("testing");
-        // add loop to check if it has gone distance
-         //going backwards at 65% during auto 
+        sleepCounter = sleepCounter + 1;
+        if(sleepCounter == 1){
+            System.out.println("STARTING PHASE 1");
+            m_Winch.moveservo();
         }
-
-        // stop
-        m_DriveTrain.drive(0,0);
-
+        else if(sleepCounter == 30){
+            System.out.println("STARTING PHASE 2");
+            m_Grabber.open();
+        }
+        else if(sleepCounter == 31){
+            System.out.println("STARTING PHASE 3");
+            while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                m_DriveTrain.drive(-0.65,0.65);
+            }
+            m_DriveTrain.drive(0, 0);
+            System.out.println("STARTING PHASE 3 END");
+        }
         
     }
 
@@ -83,8 +85,16 @@ public class AutonomousCommand2 extends CommandBase {
 
     // Returns true when the command should end.
     @Override
-    public boolean isFinished() {
-        return true;
+    public boolean isFinished() {  
+        if (sleepCounter > Constants.sleepCounterConstant)
+        {
+            m_DriveTrain.drive(0, 0);
+            sleepCounter = 0;
+            m_DriveTrain.setCoastMode();
+            return true;
+        }
+        else 
+            return false;
 
 
     }
