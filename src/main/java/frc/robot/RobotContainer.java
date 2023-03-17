@@ -90,8 +90,8 @@ public class RobotContainer {
     // Configure default commands
 
     // Configure autonomous sendable chooser
-    m_chooser.setDefaultOption("Autonomous Command", new
-    AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));   
+    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain)); 
+    m_chooser.addOption("auto2", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain));
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain));
     m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
 
