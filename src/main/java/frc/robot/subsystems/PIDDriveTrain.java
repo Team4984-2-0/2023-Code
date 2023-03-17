@@ -26,6 +26,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.RelativeEncoder;
@@ -44,7 +46,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private int loopcounter;
     private RelativeEncoder leftBackEncoder;
     private RelativeEncoder leftFrontEncoder;
-    private RelativeEncoder rightBackEncoder;
+    public RelativeEncoder rightBackEncoder;
     private RelativeEncoder rightFrontEncoder;
     private IdleMode MotorMode;
     private double groundincline;
@@ -109,12 +111,13 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor.setOpenLoopRampRate(0);
             rightBackMotor.setOpenLoopRampRate(0);
 
-            // leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
+
+            leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
             // to
             // be changed
-            // leftFrontEncoder = leftFrontMotor.getEncoder();
-            // rightBackEncoder = rightBackMotor.getEncoder();
-            // rightFrontEncoder = rightFrontMotor.getEncoder();
+            leftFrontEncoder = leftFrontMotor.getEncoder();
+            rightBackEncoder = rightBackMotor.getEncoder();
+            rightFrontEncoder = rightFrontMotor.getEncoder();
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
@@ -129,6 +132,8 @@ public class PIDDriveTrain extends PIDSubsystem {
         // setSetpoint() - Sets where the PID controller should move the system
         // to
         // enable() - Enables the PID controller.
+        ShuffleboardTab showdiff = Shuffleboard.getTab("PID Drive Train");
+        showdiff.add("Drive Train",differentialDrive1);
 
     }
 
@@ -138,11 +143,17 @@ public class PIDDriveTrain extends PIDSubsystem {
         super.periodic();
         SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
         SmartDashboard.putString("Motor Mode",getMotorMode());
+
+        SmartDashboard.putNumber("leftBackEncoder",leftBackEncoder.getPosition());
+        SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
+        SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
+        SmartDashboard.putNumber("rightFrontEncoder",rightFrontEncoder.getPosition());
+        
     }
 
     @Override
     public double getMeasurement() {
-
+        
         return m_DriveTrainGyro.getPitch();
     }
 

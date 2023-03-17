@@ -76,7 +76,7 @@ public class Winch extends SubsystemBase {
 
     }
     public void moveservo() {
-        armservo.setAngle(180);
+        armservo.setAngle(15);
         
     }
 }

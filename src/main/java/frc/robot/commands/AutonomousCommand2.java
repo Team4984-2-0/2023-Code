@@ -57,12 +57,22 @@ public class AutonomousCommand2 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_Winch.moveservo();
-        m_Grabber.open();
-    //going backwards at 65% during auto 
-        m_DriveTrain.drive(-0.65,-0.65);
-        wait(750);
+        //m_Winch.moveservo();
+        // needs wait
+        //m_Grabber.open();
+        // needs wait
+        while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
+            m_DriveTrain.drive(-0.65,0.65);
+            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
+            //System.out.println("testing");
+        // add loop to check if it has gone distance
+         //going backwards at 65% during auto 
+        }
+
+        // stop
         m_DriveTrain.drive(0,0);
+
         
     }
 
@@ -74,15 +84,7 @@ public class AutonomousCommand2 extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-         
-        if (sleepCounter > Constants.sleepCounterConstant)
-        {
-            m_DriveTrain.drive(0, 0);
-            sleepCounter = 0;
-            return true;
-        }
-        else 
-            return false;
+        return true;
 
 
     }
