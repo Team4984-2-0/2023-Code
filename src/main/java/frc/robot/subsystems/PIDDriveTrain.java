@@ -18,8 +18,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants;
-
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -48,9 +50,9 @@ public class PIDDriveTrain extends PIDSubsystem {
     private RelativeEncoder leftFrontEncoder;
     public RelativeEncoder rightBackEncoder;
     private RelativeEncoder rightFrontEncoder;
-    private IdleMode MotorMode;
+    private String MotorMode;
     private double groundincline;
-
+    private PowerDistribution PDP;
     // P I D Variables
     private static final double kP = 1.0;
     private static final double kI = 0.0;
@@ -64,7 +66,7 @@ public class PIDDriveTrain extends PIDSubsystem {
 
         super(new PIDController(kP, kI, kD));
         getController().setTolerance(0.2);
-
+        MotorMode = "Coast";
         try {
             m_DriveTrainGyro = new AHRS(SPI.Port.kMXP);
         } catch (RuntimeException ex) {
@@ -111,10 +113,7 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor.setOpenLoopRampRate(0);
             rightBackMotor.setOpenLoopRampRate(0);
 
-
-            leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
-            // to
-            // be changed
+            leftBackEncoder = leftBackMotor.getEncoder();
             leftFrontEncoder = leftFrontMotor.getEncoder();
             rightBackEncoder = rightBackMotor.getEncoder();
             rightFrontEncoder = rightFrontMotor.getEncoder();
@@ -128,12 +127,16 @@ public class PIDDriveTrain extends PIDSubsystem {
         waitfornavx();
         groundincline = m_DriveTrainGyro.getRoll();
 
-        // Use these to get going:
-        // setSetpoint() - Sets where the PID controller should move the system
-        // to
-        // enable() - Enables the PID controller.
+
+        // Shuffle board
         ShuffleboardTab showdiff = Shuffleboard.getTab("PID Drive Train");
         showdiff.add("Drive Train",differentialDrive1);
+
+        PDP = new PowerDistribution(0, ModuleType.kCTRE);
+        ShuffleboardTab showpower = Shuffleboard.getTab("Power");
+        showpower.add("pdp",PDP);
+
+
 
     }
 
@@ -143,12 +146,10 @@ public class PIDDriveTrain extends PIDSubsystem {
         super.periodic();
         SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
         SmartDashboard.putString("Motor Mode",getMotorMode());
-
         SmartDashboard.putNumber("leftBackEncoder",leftBackEncoder.getPosition());
         SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
         SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
         SmartDashboard.putNumber("rightFrontEncoder",rightFrontEncoder.getPosition());
-        
     }
 
     @Override
@@ -205,6 +206,7 @@ public class PIDDriveTrain extends PIDSubsystem {
         leftBackMotor.setIdleMode(IdleMode.kCoast);
         rightFrontMotor.setIdleMode(IdleMode.kCoast);
         rightBackMotor.setIdleMode(IdleMode.kCoast);
+        MotorMode = "Coast";
     }
 
     public void setBrakeMode() {
@@ -212,6 +214,7 @@ public class PIDDriveTrain extends PIDSubsystem {
         leftBackMotor.setIdleMode(IdleMode.kBrake);
         rightFrontMotor.setIdleMode(IdleMode.kBrake);
         rightBackMotor.setIdleMode(IdleMode.kBrake);
+        MotorMode = "Brake";
     }
 
     public void ToggleMotorMode() {

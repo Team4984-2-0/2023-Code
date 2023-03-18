@@ -140,9 +140,9 @@ public class RobotContainer {
     Trigger aBalance = new JoystickButton(driver, XboxController.Button.kA.value)
         .whileTrue(new BalanceCommand(m_driveTrain));
     if (!Constants.robottype) {
-      Trigger aButton = new JoystickButton(operator, XboxController.Button.kA.value)
+      Trigger aButton = new JoystickButton(operator, XboxController.Button.kB.value)
           .whileTrue(new OpenGrabber(m_Grabber));
-      Trigger bButton = new JoystickButton(operator, XboxController.Button.kB.value)
+      Trigger bButton = new JoystickButton(operator, XboxController.Button.kA.value)
           .whileTrue(new CloseGrabber(m_Grabber));
     }
 
