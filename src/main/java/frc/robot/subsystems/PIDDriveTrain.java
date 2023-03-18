@@ -19,7 +19,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -50,6 +53,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private RelativeEncoder rightFrontEncoder;
     private IdleMode MotorMode;
     private double groundincline;
+    PowerDistribution PDP;
 
     // P I D Variables
     private static final double kP = 1.0;
@@ -135,6 +139,10 @@ public class PIDDriveTrain extends PIDSubsystem {
         // setSetpoint() - Sets where the PID controller should move the system
         // to 
         // enable() - Enables the PID controller.
+        PDP = new PowerDistribution(0,ModuleType.kCTRE);
+        ShuffleboardTab showpower = Shuffleboard.getTab("Power");
+        showpower.add("pdp",PDP);
+
         ShuffleboardTab showdiff = Shuffleboard.getTab("PID Drive Train");
         showdiff.add("Drive Train",differentialDrive1);
 

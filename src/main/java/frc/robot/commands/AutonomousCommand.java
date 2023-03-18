@@ -59,8 +59,8 @@ public class AutonomousCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-
-        String testAutoData = SmartDashboard.getString("Auto mode", "none");
+        
+/*         String testAutoData = SmartDashboard.getString("Auto mode", "none");
         // Not done yet
         try{
             switch(testAutoData){
@@ -74,7 +74,7 @@ public class AutonomousCommand extends CommandBase {
         }
         catch(IllegalArgumentException e){
             Robot.printYellow("Something went wrong trying to run autonomous.");
-        }
+        } */
 
 
 
