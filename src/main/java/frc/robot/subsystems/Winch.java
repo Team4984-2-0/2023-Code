@@ -30,11 +30,9 @@ import edu.wpi.first.wpilibj.Servo;
 public class Winch extends SubsystemBase {
 
     private CANSparkMax winchMotor;
-    private DigitalInput winchlimitSwitch;
     private Servo armservo;
     public Winch() {
         // Create motor
-        winchlimitSwitch = new DigitalInput(0);
         winchMotor = new CANSparkMax(Constants.CANWinch, MotorType.kBrushless);
         armservo = new Servo(0);
     }
@@ -55,6 +53,7 @@ public class Winch extends SubsystemBase {
     // here. Call these from Commands.
 
     public void move(double Value) {
+        /* 
         if (winchlimitSwitch.get() && Value < 0) {
             //System.out.println("1");
             winchMotor.set(Value);
@@ -67,7 +66,8 @@ public class Winch extends SubsystemBase {
         } else {
             winchMotor.set(0.01);
             //System.out.println("else");
-        }
+        }*/
+        winchMotor.set(Value);
 
         // moves the motor
         //System.out.println("Limit Switch: " + winchlimitSwitch.get());

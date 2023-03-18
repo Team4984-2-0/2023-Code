@@ -66,9 +66,9 @@ public class AutonomousCommand2 extends CommandBase {
             m_Winch.moveservo();
         }
         else if(sleepCounter == 30){
-            m_Grabber.open();
+            m_Grabber.close();
         }
-        else if(sleepCounter > 30){
+        else if(sleepCounter == 31){
             while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
                 //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
                 m_DriveTrain.drive(-0.65,0.65);
