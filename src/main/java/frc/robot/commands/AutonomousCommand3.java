@@ -1,4 +1,4 @@
-/* 
+
 package frc.robot.commands;
 import java.util.concurrent.TimeUnit;
 
@@ -86,4 +86,3 @@ public class AutonomousCommand3 extends CommandBase {
 
     }
 }
-*/
