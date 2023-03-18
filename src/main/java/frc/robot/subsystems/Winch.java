@@ -34,7 +34,7 @@ public class Winch extends SubsystemBase {
     private Servo armservo;
     public Winch() {
         // Create motor
-        winchlimitSwitch = new DigitalInput(0);
+       // winchlimitSwitch = new DigitalInput(0);
         winchMotor = new CANSparkMax(Constants.CANWinch, MotorType.kBrushless);
         armservo = new Servo(0);
     }

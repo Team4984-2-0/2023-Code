@@ -38,7 +38,7 @@ public class Grabber extends SubsystemBase {
         // Create motor
         GrabMotor = new CANSparkMax(6, MotorType.kBrushless);
         GrabMotor.setIdleMode(IdleMode.kBrake);
-        grabberSwitch = new DigitalInput(1);
+        //grabberSwitch = new DigitalInput(1);
 
     }
 
