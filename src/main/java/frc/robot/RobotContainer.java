@@ -98,7 +98,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", m_chooser);
     CameraThread myCameraThread = null;
 
-    try {
+    /*try {
       myCameraThread = new CameraThread();
       CameraServer.getServer("test");
       // CameraServer.startAutomaticCapture();
@@ -114,7 +114,7 @@ public class RobotContainer {
       // myCameraThread.getCameraConfig();
     } finally {
       myCameraThread = null;
-    }
+    }*/
 
   }
 

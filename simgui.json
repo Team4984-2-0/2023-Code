@@ -28,8 +28,16 @@
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/DriveTrain/Differential Drive 1": "DifferentialDrive",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/PID Drive Train/Drive Train": "DifferentialDrive",
       "/SmartDashboard/Auto Mode": "String Chooser",
       "/SmartDashboard/Autonomous Command": "Command"
+    },
+    "windows": {
+      "/SmartDashboard/Auto Mode": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   }
 }

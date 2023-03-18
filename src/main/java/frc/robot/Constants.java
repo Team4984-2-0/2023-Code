@@ -23,16 +23,37 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public class Constants {
+    /**
+     * public static final class DriveConstants {
+     * public static final int kLeftMotor1Port = 0;
+     * public static final int kLeftMotor2Port = 1;
+     * public static final int kRightMotor1Port = 2;
+     * public static final int kRightMotor2Port = 3;
+     * }
+     */
+
+     //CAMERA FUNCTIONS
+    public static final int CAMERA1_FPS = 12;
+    public static final int CAMERA2_FPS = 12;
+
+    public static final int CAMERA1_BRIGHTNESS = 50;
+    public static final int CAMERA2_BRIGHTNESS = 44;
     public static final int CANBackLeft = 4;
     public static final int CANFrontLeft = 3;
     public static final int CANBackRight = 2;
     public static final int CANFrontRight = 1;
     public static final int CANWinch = 5;
     public static final int CANGrabber = 6;
-    public static final int CAMERA1_FPS = 10;
-    public static final int CAMERA1_BRIGHTNESS = 50;
     public static boolean robottype = false; 
-    public static int sleepCounterConstant = 32;
+    public static int sleepCounterConstant = 35;
+    
+
+    //
+    public static final double PIDStop = 0;
+    public static final double PIDSlow = 0.5;
+
+    public static final int PIDCheck = 4096;
+
     public static double encoderfullrotation = 13.2143182; 
     public static double wheelcircumference = (6*3.14)/12;
     public static double RevPerFoot = encoderfullrotation/wheelcircumference;

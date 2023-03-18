@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -58,23 +59,35 @@ public class AutonomousCommand2 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        //
         sleepCounter = sleepCounter + 1;
+
+        Robot.printYellow("Sleep counter - " + sleepCounter);
         if(sleepCounter == 1){
-            System.out.println("STARTING PHASE 1");
             m_Winch.moveservo();
         }
         else if(sleepCounter == 30){
-            System.out.println("STARTING PHASE 2");
-            m_Grabber.open();
+            m_Grabber.close();
         }
         else if(sleepCounter == 31){
-            System.out.println("STARTING PHASE 3");
             while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
                 m_DriveTrain.drive(-0.65,0.65);
+                //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
+                //System.out.println("testing");
+            // add loop to check if it has gone distance
+             //going backwards at 65% during auto 
             }
-            m_DriveTrain.drive(0, 0);
-            System.out.println("STARTING PHASE 3 END");
+    
+            // stop
+            m_DriveTrain.drive(0,0);
         }
+        //m_Winch.moveservo();
+        // needs wait
+        //m_Grabber.open();
+        // needs wait
+        
+
         
     }
 
@@ -85,12 +98,12 @@ public class AutonomousCommand2 extends CommandBase {
 
     // Returns true when the command should end.
     @Override
-    public boolean isFinished() {  
+    public boolean isFinished() {
+         
         if (sleepCounter > Constants.sleepCounterConstant)
         {
             m_DriveTrain.drive(0, 0);
             sleepCounter = 0;
-            m_DriveTrain.setCoastMode();
             return true;
         }
         else 

@@ -11,10 +11,10 @@
 // ROBOTBUILDER TYPE: Command.
 
 package frc.robot.commands;
-import java.util.concurrent.TimeUnit;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -37,6 +37,8 @@ public class AutonomousCommand extends CommandBase {
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
 
+        //SmartDashboard.getData("Auto Mode");
+
     }
 
     // Called when the command is initially scheduled.
@@ -45,33 +47,41 @@ public class AutonomousCommand extends CommandBase {
     }
 
     // Wait for a certain amount of time, easier to use this rather than repeating the try/catch
-    private void wait(int timeInMS){
+    /*private void wait(int timeInMS){
         try {
             Thread.sleep(timeInMS);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
+    }*/
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_Winch.moveservo();
-        //System.out.println("Autonomous 1");
-        //if(sleepCounter < 40){
-            m_DriveTrain.drive(0.65, 0.65);
-            // Drive forward
-        //}
-        //else if(sleepCounter < 60){
-            
-        //}
-        //System.out.println("Autonomous 2");
-    
-        //System.out.println("Autonomous 3");
-        //m_DriveTrain.drive(0, 0);
-        //System.out.println("Autonomous 4 counter = " + sleepCounter);
-        sleepCounter ++;
+
+        String testAutoData = SmartDashboard.getString("Auto mode", "none");
+        // Not done yet
+        try{
+            switch(testAutoData){
+                default:
+                    Robot.printYellow("Nothing special.");
+                    m_DriveTrain.drive(0.5, 0.5);
+                    //wait(1000);
+                    m_DriveTrain.drive(0, 0);
+                    break;
+            }
+        }
+        catch(IllegalArgumentException e){
+            Robot.printYellow("Something went wrong trying to run autonomous.");
+        }
+
+
+
+
+
+
+
     }
 
     // Called once the command ends or is interrupted.
