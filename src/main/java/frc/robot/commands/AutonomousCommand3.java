@@ -73,7 +73,14 @@ public class AutonomousCommand3 extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        if (sleepCounter > Constants.sleepCounterConstant)
+        {
+            m_DriveTrain.drive(0, 0);
+            sleepCounter = 0;
+            return true;
+        }
+        else 
+            return false;
 
 
     }
