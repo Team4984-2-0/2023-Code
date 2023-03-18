@@ -107,16 +107,18 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontMotor = new CANSparkMax(Constants.CANFrontRight, MotorType.kBrushless);
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
-            
-            leftFrontMotor.setOpenLoopRampRate(0);
-            leftBackMotor.setOpenLoopRampRate(0);
-            rightFrontMotor.setOpenLoopRampRate(0);
-            rightBackMotor.setOpenLoopRampRate(0);
+            setCoastMode();
+            leftFrontMotor.setOpenLoopRampRate(0.3);
+            leftBackMotor.setOpenLoopRampRate(0.3);
+            rightFrontMotor.setOpenLoopRampRate(0.3);
+            rightBackMotor.setOpenLoopRampRate(0.3);
 
             leftBackEncoder = leftBackMotor.getEncoder();
             leftFrontEncoder = leftFrontMotor.getEncoder();
             rightBackEncoder = rightBackMotor.getEncoder();
             rightFrontEncoder = rightFrontMotor.getEncoder();
+
+
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
@@ -247,14 +249,14 @@ public class PIDDriveTrain extends PIDSubsystem {
     public String getMotorMode() {
 
         if (leftFrontMotor.getIdleMode() == IdleMode.kBrake && rightFrontMotor.getIdleMode() == IdleMode.kBrake) {
-            return "Brake Mode Enabled";
+            return "Brake";
 
         } else if (leftFrontMotor.getIdleMode() == IdleMode.kCoast
                 && rightFrontMotor.getIdleMode() == IdleMode.kCoast) {
-            return "Coast Mode Enabled";
+            return "Coast";
 
         } else {
-            return "mismatched motor modes";
+            return "Error";
 
         }
     }

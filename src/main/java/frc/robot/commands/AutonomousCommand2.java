@@ -36,7 +36,7 @@ public class AutonomousCommand2 extends CommandBase {
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
-        m_DriveTrain.setBrakeMode();
+        
 
     }
 
@@ -60,6 +60,7 @@ public class AutonomousCommand2 extends CommandBase {
     public void execute() {
         sleepCounter = sleepCounter + 1;
         if(sleepCounter == 1){
+            m_DriveTrain.setBrakeMode();
             System.out.println("STARTING PHASE 1");
             m_Winch.moveservo();
         }
@@ -74,6 +75,7 @@ public class AutonomousCommand2 extends CommandBase {
                 m_DriveTrain.drive(-0.65,0.65);
             }
             m_DriveTrain.drive(0, 0);
+            m_DriveTrain.setCoastMode();
             System.out.println("STARTING PHASE 3 END");
         }
         
@@ -91,7 +93,6 @@ public class AutonomousCommand2 extends CommandBase {
         {
             m_DriveTrain.drive(0, 0);
             sleepCounter = 0;
-            m_DriveTrain.setCoastMode();
             return true;
         }
         else 
