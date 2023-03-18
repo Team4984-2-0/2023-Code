@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 
  
-public class AutonomousCommand extends CommandBase {
+public class AutonomousCommand2 extends CommandBase {
 
     private Grabber m_Grabber;
     private Winch m_Winch;
@@ -31,11 +31,12 @@ public class AutonomousCommand extends CommandBase {
     private int sleepCounter;
 
 
-    public AutonomousCommand(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
+    public AutonomousCommand2(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
         m_Grabber = Grabber_sub;
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
+        
 
     }
 
@@ -57,21 +58,27 @@ public class AutonomousCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_Winch.moveservo();
-        //System.out.println("Autonomous 1");
-        //if(sleepCounter < 40){
-            m_DriveTrain.drive(0.65, 0.65);
-            // Drive forward
-        //}
-        //else if(sleepCounter < 60){
-            
-        //}
-        //System.out.println("Autonomous 2");
-    
-        //System.out.println("Autonomous 3");
-        //m_DriveTrain.drive(0, 0);
-        //System.out.println("Autonomous 4 counter = " + sleepCounter);
-        sleepCounter ++;
+        sleepCounter = sleepCounter + 1;
+        if(sleepCounter == 1){
+            m_DriveTrain.setBrakeMode();
+            System.out.println("STARTING PHASE 1");
+            m_Winch.moveservo();
+        }
+        else if(sleepCounter == 30){
+            System.out.println("STARTING PHASE 2");
+            m_Grabber.open();
+        }
+        else if(sleepCounter == 31){
+            m_Grabber.stop();
+            System.out.println("STARTING PHASE 3");
+            while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                m_DriveTrain.drive(-0.65,0.65);
+            }
+            m_DriveTrain.drive(0, 0);
+            m_DriveTrain.setCoastMode();
+            System.out.println("STARTING PHASE 3 END");
+        }
+        
     }
 
     // Called once the command ends or is interrupted.
@@ -81,8 +88,7 @@ public class AutonomousCommand extends CommandBase {
 
     // Returns true when the command should end.
     @Override
-    public boolean isFinished() {
-         
+    public boolean isFinished() {  
         if (sleepCounter > Constants.sleepCounterConstant)
         {
             m_DriveTrain.drive(0, 0);
