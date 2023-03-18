@@ -32,13 +32,11 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Grabber extends SubsystemBase {
 
     private CANSparkMax GrabMotor;
-    private DigitalInput grabberSwitch;
 
     public Grabber() {
         // Create motor
         GrabMotor = new CANSparkMax(6, MotorType.kBrushless);
         GrabMotor.setIdleMode(IdleMode.kBrake);
-        //grabberSwitch = new DigitalInput(1);
 
     }
 
@@ -60,13 +58,7 @@ public class Grabber extends SubsystemBase {
     public void open() {
         // moves the motor
         // Robot.printYellow("Grabber open");
-        if (grabberSwitch.get()) {
-            GrabMotor.set(-0.30);
-
-        } else {
-            GrabMotor.set(0);
-
-        }
+        GrabMotor.set(-0.30);
 
     }
 
