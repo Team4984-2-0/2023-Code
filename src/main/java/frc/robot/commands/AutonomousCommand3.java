@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Winch;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -46,21 +47,39 @@ public class AutonomousCommand3 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        //
+        sleepCounter = sleepCounter + 1;
+
+        Robot.printYellow("Sleep counter - " + sleepCounter);
+        if(sleepCounter == 1){
+            m_Winch.moveservo();
+        }
+        else if(sleepCounter == 30){
+            m_Grabber.close();
+        }
+        else if(sleepCounter == 31){
+            while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
+                m_DriveTrain.drive(-0.65,0.65);
+                //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
+                //System.out.println("testing");
+            // add loop to check if it has gone distance
+             //going backwards at 65% during auto 
+            }
+    
+            // stop
+            m_DriveTrain.drive(0,0);
+        }
+
+        // Go BACK!!! (first attempt)
+        else if(sleepCounter == 32){
+            m_DriveTrain.navXTurn(90);
+        }
         //m_Winch.moveservo();
         // needs wait
         //m_Grabber.open();
         // needs wait
-        while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
-            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
-            m_DriveTrain.drive(-0.65,0.65);
-            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
-            //System.out.println("testing");
-        // add loop to check if it has gone distance
-         //going backwards at 65% during auto 
-        }
-
-        // stop
-        m_DriveTrain.drive(0,0);
+        
 
         
     }

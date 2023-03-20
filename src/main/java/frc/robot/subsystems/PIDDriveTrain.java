@@ -60,6 +60,8 @@ public class PIDDriveTrain extends PIDSubsystem {
     // From early encoder class
     private double desired = 0.0;
 
+    
+
     //
     private static final String robottype = "";
 
@@ -244,6 +246,21 @@ public class PIDDriveTrain extends PIDSubsystem {
 
     public double getNavXRoll() {
         return m_DriveTrainGyro.getRoll();
+    }
+
+    public double getNavXPitch(){
+        return m_DriveTrainGyro.getPitch();
+    }
+
+    public void navXTurn(double turnAngle){
+        double currentAngle = getNavXPitch();
+        double targetAngle = currentAngle + turnAngle;
+        
+        while(targetAngle > currentAngle){
+            drive(0.3, 0.3);
+            currentAngle = getNavXPitch();
+        }
+        drive(0.0,0.0);
     }
 
     public String getMotorMode() {
