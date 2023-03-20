@@ -48,7 +48,7 @@ public class TankDrive extends CommandBase {
             // m_driveTrain.drive(m_LeftStick.getAsDouble(), m_RightStick.getAsDouble());
             left = xbox.getLeftY();
             right = xbox.getRightY();
-            m_driveTrain.drive(left, right);
+            m_driveTrain.drive(-left, right);
         }
     }
 

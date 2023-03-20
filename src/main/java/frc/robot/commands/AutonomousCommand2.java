@@ -70,6 +70,7 @@ public class AutonomousCommand2 extends CommandBase {
             m_Grabber.close();
         }
         else if(sleepCounter == 31){
+            m_Grabber.stop();
             while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
                 //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
                 m_DriveTrain.drive(-0.65,0.65);
