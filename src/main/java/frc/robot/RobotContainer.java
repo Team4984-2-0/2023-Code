@@ -64,7 +64,6 @@ public class RobotContainer {
   public final PIDDriveTrain m_driveTrain = new PIDDriveTrain();
   public final Winch m_Winch = new Winch();
   public final Grabber m_Grabber = new Grabber();
-  public final Servo m_Dropper = new Servo(1);
 
   // XboxController
   private final XboxController driver = new XboxController(0);
@@ -94,7 +93,7 @@ public class RobotContainer {
     m_chooser.addOption("auto2", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain));
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain));
     m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
-    m_chooser.addOption("Autonomous Command 2", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain, m_Dropper));
+    m_chooser.addOption("Autonomous Command 2", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain));
 
     SmartDashboard.putData("Auto Mode", m_chooser);
     CameraThread myCameraThread = null;

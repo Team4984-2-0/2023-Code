@@ -1,11 +1,33 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "navX-Sensor[0]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/DriveTrain/Differential Drive 1": "DifferentialDrive",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/Shuffleboard/PID Drive Train/Drive Train": "DifferentialDrive",
       "/SmartDashboard/Auto Mode": "String Chooser",
       "/SmartDashboard/Autonomous Command": "Command"
+    },
+    "windows": {
+      "/Shuffleboard/PID Drive Train/Drive Train": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Auto Mode": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {
@@ -21,7 +43,22 @@
           "open": true
         }
       },
+      "Shuffleboard": {
+        "PID Drive Train": {
+          "Drive Train": {
+            "open": true
+          },
+          "open": true
+        },
+        "Power": {
+          "open": true
+        },
+        "open": true
+      },
       "SmartDashboard": {
+        "Auto Mode": {
+          "open": true
+        },
         "open": true
       }
     }

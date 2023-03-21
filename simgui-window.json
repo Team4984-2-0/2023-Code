@@ -1,54 +1,58 @@
 {
+  "Docking": {
+    "Data": []
+  },
   "MainWindow": {
     "GLOBAL": {
-      "height": "1360",
-      "maximized": "0",
+      "fps": "120",
+      "height": "1369",
+      "maximized": "1",
       "style": "0",
       "userScale": "2",
-      "width": "1278",
-      "xpos": "1",
-      "ypos": "31"
+      "width": "2560",
+      "xpos": "0",
+      "ypos": "23"
     }
   },
   "Window": {
+    "###/Shuffleboard/PID Drive Train/Drive Train": {
+      "Collapsed": "0",
+      "Pos": "307,334",
+      "Size": "300,350"
+    },
     "###/SmartDashboard/Auto Mode": {
       "Collapsed": "0",
-      "Pos": "178,83",
+      "Pos": "673,488",
       "Size": "254,54"
     },
     "###FMS": {
       "Collapsed": "0",
-      "Pos": "20,813",
+      "Pos": "5,540",
       "Size": "283,146"
     },
     "###Joysticks": {
       "Collapsed": "0",
-<<<<<<< Updated upstream
-      "Pos": "312,295",
-      "Size": "430,73"
-=======
-      "Pos": "435,891",
-      "Size": "796,73"
->>>>>>> Stashed changes
+      "Pos": "1,722",
+      "Size": "796,240"
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "212,1119",
-      "Size": "937,226"
+      "Pos": "1286,20",
+      "Size": "750,866"
     },
     "###Other Devices": {
       "Collapsed": "0",
-      "Pos": "536,21",
-      "Size": "312,868"
+      "Pos": "1025,20",
+      "Size": "250,695"
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "11,529",
+      "Pos": "7,307",
       "Size": "192,218"
     },
     "###Timing": {
       "Collapsed": "0",
-      "Pos": "6,187",
+      "Pos": "5,150",
       "Size": "135,150"
     },
     "Debug##Default": {

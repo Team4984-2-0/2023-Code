@@ -48,10 +48,12 @@ public class PIDDriveTrain extends PIDSubsystem {
     private int loopcounter;
     private RelativeEncoder leftBackEncoder;
     private RelativeEncoder leftFrontEncoder;
-    private RelativeEncoder rightBackEncoder;
+    public RelativeEncoder rightBackEncoder;
     private RelativeEncoder rightFrontEncoder;
-    private IdleMode MotorMode;
-
+    private String MotorMode;
+    private double groundincline;
+    private PowerDistribution PDP;
+    private double deadZone;
     // P I D Variables
     private static final double kP = 1.0;
     private static final double kI = 0.0;
@@ -77,16 +79,6 @@ public class PIDDriveTrain extends PIDSubsystem {
         {
             m_DriveTrainGyro.reset();
         }
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        // i believe we needed this wait to let the navx boot properly
-        navX_level = m_DriveTrainGyro.getRoll();
-        navX_heading = m_DriveTrainGyro.getCompassHeading();
-        navX_yaw = m_DriveTrainGyro.getYaw();
 
         if (Constants.robottype) {
             // Left Motors
@@ -128,12 +120,6 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightFrontEncoder = rightFrontMotor.getEncoder();
 
 
-            //leftBackEncoder = leftBackMotor.getEncoder();// 4096 wil need
-                                                                                                       // to
-            // be changed
-            //leftFrontEncoder = leftFrontMotor.getEncoder();
-            //rightBackEncoder = rightBackMotor.getEncoder();
-            //rightFrontEncoder = rightFrontMotor.getEncoder();
         }
 
         differentialDrive1 = new DifferentialDrive(leftMotors, rightMotors);
@@ -143,6 +129,7 @@ public class PIDDriveTrain extends PIDSubsystem {
         differentialDrive1.setMaxOutput(1.0);
         waitfornavx();
         groundincline = m_DriveTrainGyro.getRoll();
+        deadZone = 0.08;
 
 
         // Shuffle board
@@ -161,25 +148,18 @@ public class PIDDriveTrain extends PIDSubsystem {
     public void periodic() {
         // This method will be called once per scheduler run
         super.periodic();
-
+        SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
+        SmartDashboard.putString("Motor Mode",getMotorMode());
+        SmartDashboard.putNumber("leftBackEncoder",leftBackEncoder.getPosition());
+        SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
+        SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
+        SmartDashboard.putNumber("rightFrontEncoder",rightFrontEncoder.getPosition());
     }
 
     @Override
     public double getMeasurement() {
         
         return m_DriveTrainGyro.getPitch();
-    }
-
-    public double getLevel(){
-        return navX_level;
-    }
-
-    public double getHeading(){
-        return navX_heading;
-    }
-
-    public double getYaw(){
-        return navX_yaw;
     }
 
     @Override
@@ -207,10 +187,19 @@ public class PIDDriveTrain extends PIDSubsystem {
     // here. Call these from Commands.
 
     public void drive(double leftDrive, double rightDrive) {
-        if (Math.abs(rightDrive) < 0.08)
+        if (Math.abs(rightDrive) < deadZone)
             rightDrive = 0.0;
-        if (Math.abs(leftDrive) < 0.08)
+        else if (rightDrive > 0)
+            rightDrive = (1-0)/(1-deadZone) * (rightDrive-1) + 1;
+        else if (rightDrive < 0)
+            rightDrive = ((-1)-0)/((-1)-(-deadZone)) * (rightDrive-(-1)) + (-1);
+
+        if (Math.abs(leftDrive) < deadZone)
             leftDrive = 0.0;
+        else if (leftDrive > 0)
+            leftDrive = (1-0)/(1-deadZone) * (leftDrive-1) + 1;
+        else if (leftDrive < 0)        
+            leftDrive = ((-1)-0)/((-1)-(-deadZone)) * (leftDrive-(-1)) + (-1);
 
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
         //System.out.println("LeftDrive: " + leftDrive + "RightDrive: " + rightDrive);
