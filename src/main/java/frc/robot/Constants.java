@@ -9,7 +9,6 @@
 // it from being updated in the future.
 
 package frc.robot;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -33,8 +32,10 @@ public class Constants {
     public static final int CAMERA1_FPS = 10;
     public static final int CAMERA1_BRIGHTNESS = 50;
     public static boolean robottype = false; 
-    
-
+    public static int sleepCounterConstant = 32;
+    public static double encoderfullrotation = 13.2143182; 
+    public static double wheelcircumference = (6*3.14)/12;
+    public static double RevPerFoot = encoderfullrotation/wheelcircumference;
 }
 
 

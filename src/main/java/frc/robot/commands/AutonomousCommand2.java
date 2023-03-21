@@ -13,8 +13,6 @@
 package frc.robot.commands;
 import java.util.concurrent.TimeUnit;
 
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Grabber;
@@ -30,24 +28,15 @@ public class AutonomousCommand2 extends CommandBase {
     private Grabber m_Grabber;
     private Winch m_Winch;
     private PIDDriveTrain m_DriveTrain;
-    private Servo m_Dropper;
     private int sleepCounter;
-/*     private double conversion = 18.85; //18.85 inches per revolution
-    private double toChargeStation = 5; //feet to charge station
-    private double overChargeStation = 5; //feet over charge station
-    private double revolutionsToTravel;
-    private double initialPosition; */
-    private double initialHeading;
-    private double initialYaw;
-   // private Command grabber_close = new CloseGrabber(m_Grabber);
 
 
-    public AutonomousCommand2(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub, Servo Servo_sub) {
+    public AutonomousCommand2(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
         m_Grabber = Grabber_sub;
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
-        m_Dropper = Servo_sub;
         sleepCounter = 0;
+        
 
     }
 
@@ -69,116 +58,27 @@ public class AutonomousCommand2 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        //System.out.println("Autonomous 1");
-        //m_DriveTrain.drive(-0.5, -0.5);
-
-        //System.out.println(m_DriveTrain.leftBackEncoder.getPosition());
-        //System.out.println("Autonomous 2");
-       
-        //System.out.println("Autonomous 3");
-        //m_DriveTrain.drive(0, 0);
-        //System.out.println("Autonomous 4 counter = " + sleepCounter);
-        //sleepCounter ++;
-
-        // instantiate grabber to close
-        // turn servo
-        // open grabber
-        // move backwards (facing backwards) - check navx
-        // reach other side of charge station - mobility
-        // turn 180 degrees
-        // move backwards (facing backwards) - check navx
-        // balance command
-
-        m_Grabber.close();
-        // grabber holds onto cube
-
-        m_Dropper.setAngle(180);
-        // servo turns to drop grabber
-
-        m_Grabber.open();
-        // grabber lets go (scores) cube
-
-        for (int i = 0; i<5; i++) {
-            m_DriveTrain.drive(-0.7, -0.7);
-
-            if (m_DriveTrain.getNavXRoll() > m_DriveTrain.getLevel()) {
-                break;
-
-            }
+        sleepCounter = sleepCounter + 1;
+        if(sleepCounter == 1){
+            m_DriveTrain.setBrakeMode();
+            System.out.println("STARTING PHASE 1");
+            m_Winch.moveservo();
         }
-        // travels backwards until navx sees robot going down other side of charge station
-
-        for (int i = 0; i<5; i++) {
-            m_DriveTrain.drive(-0.5, -0.5);
-
-            if (m_DriveTrain.getNavXRoll() == m_DriveTrain.getLevel() || (m_DriveTrain.getNavXRoll() >= (m_DriveTrain.getLevel() - 1) && m_DriveTrain.getNavXRoll() <= (m_DriveTrain.getLevel() + 1))) {
-                break;
-
-            }
+        else if(sleepCounter == 30){
+            System.out.println("STARTING PHASE 2");
+            m_Grabber.open();
         }
-        // travels until navx is level (ie robot traversed charge station)
-
-        initialHeading = m_DriveTrain.getHeading();
-
-        for (int i = 0; i<5; i++) {
-            m_DriveTrain.drive(0.5, -0.5);
-
-            if (m_DriveTrain.getHeading() > (initialHeading + 180)) {
-                break;
-
+        else if(sleepCounter == 31){
+            m_Grabber.stop();
+            System.out.println("STARTING PHASE 3");
+            while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                m_DriveTrain.drive(-0.65,0.65);
             }
-        } 
-        // turns robot by 180 degrees
-
-        // alternate turn using yaw instead of absolute compass
-        /*
-        initialYaw = m_DriveTrain.getYaw();
-
-        for (int i = 0; i<5; i++) {
-            m_DriveTrain.drive(0.5, -0.5);
-
-            if (m_DriveTrain.getYaw() > (initialYaw + 180)) {
-                break;
-
-            }
-        } 
-         */
+            m_DriveTrain.drive(0, 0);
+            m_DriveTrain.setCoastMode();
+            System.out.println("STARTING PHASE 3 END");
+        }
         
-        for (int i = 0; i<5; i++) {
-            m_DriveTrain.drive(-0.7, -0.7);
-
-            if (m_DriveTrain.getNavXRoll() < m_DriveTrain.getLevel()) {
-                try {
-                    Thread.sleep(500); // gives robot extra time to get fully get up charge station before switching to auto balance
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                break;
-
-            }
-        }
-        // travels backwards until navx sees robot going up charge station
-
-        for (int i = 0; i<5; i++) {
-
-            if (m_DriveTrain.getNavXRoll() == m_DriveTrain.getLevel() || (m_DriveTrain.getNavXRoll() >= (m_DriveTrain.getLevel() - 2) && m_DriveTrain.getNavXRoll() <= (m_DriveTrain.getLevel() + 2))) {
-                break;
-
-            }
-            else if (m_DriveTrain.getNavXRoll() < m_DriveTrain.getLevel()){
-                m_DriveTrain.drive(-0.2, -0.2);
-
-            }
-            else if (m_DriveTrain.getNavXRoll() > m_DriveTrain.getLevel()){
-                m_DriveTrain.drive(0.2, 0.2);
-
-            }
-        }
-        // auto balances robot +/- 2 degrees
-        // drive train direction will likely need to be adjusted
-        // low speed is used for final adjustment
-
     }
 
     // Called once the command ends or is interrupted.
@@ -188,17 +88,17 @@ public class AutonomousCommand2 extends CommandBase {
 
     // Returns true when the command should end.
     @Override
-    public boolean isFinished() {
-         
-/*         if (sleepCounter > Constants.sleepCounterConstant)
+    public boolean isFinished() {  
+        if (sleepCounter > Constants.sleepCounterConstant)
         {
             m_DriveTrain.drive(0, 0);
+            sleepCounter = 0;
             return true;
         }
         else 
-            return false; */
+            return false;
 
-        return true;
+
     }
 
     @Override

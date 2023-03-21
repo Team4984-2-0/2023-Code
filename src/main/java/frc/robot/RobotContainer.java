@@ -82,15 +82,16 @@ public class RobotContainer {
     // SmartDashboard Buttons
     // SmartDashboard.putData("Autonomous Command", new AutonomousCommand(m_Grabber,
     // m_Winch, m_driveTrain));
-    SmartDashboard.putNumber("NavX Roll Value", m_driveTrain.getNavXRoll());
-    SmartDashboard.putString("Motor Mode", m_driveTrain.getMotorMode());
+   // SmartDashboard.putNumber("NavX Roll Value", m_driveTrain.getNavXRoll());
+   // SmartDashboard.putString("Motor Mode", m_driveTrain.getMotorMode());
     // Configure the button bindings
     configureButtonBindings();
 
     // Configure default commands
 
     // Configure autonomous sendable chooser
-    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain));
+    m_chooser.setDefaultOption("Autonomous Command", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain)); 
+    m_chooser.addOption("auto2", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain));
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain));
     m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
     m_chooser.addOption("Autonomous Command 2", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain, m_Dropper));
@@ -140,14 +141,16 @@ public class RobotContainer {
     Trigger aBalance = new JoystickButton(driver, XboxController.Button.kA.value)
         .whileTrue(new BalanceCommand(m_driveTrain));
     if (!Constants.robottype) {
-      Trigger aButton = new JoystickButton(operator, XboxController.Button.kA.value)
+      Trigger aButton = new JoystickButton(operator, XboxController.Button.kB.value)
           .whileTrue(new OpenGrabber(m_Grabber));
-      Trigger bButton = new JoystickButton(operator, XboxController.Button.kB.value)
+      Trigger bButton = new JoystickButton(operator, XboxController.Button.kA.value)
           .whileTrue(new CloseGrabber(m_Grabber));
     }
 
-    Trigger ToggleMotorMode = new JoystickButton(operator, XboxController.Button.kY.value)
+    Trigger ToggleMotorMode = new JoystickButton(driver, XboxController.Button.kY.value)
         .onTrue(new ToggleMotorMode(m_driveTrain));
+    Trigger SetCoastMode = new JoystickButton(driver, XboxController.Button.kX.value)
+        .onTrue(new SetCoastMode(m_driveTrain));
   }
 
   /**
