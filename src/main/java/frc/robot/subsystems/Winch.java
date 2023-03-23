@@ -57,8 +57,10 @@ public class Winch extends SubsystemBase {
     public void move(double Value) {
         winchMotor.set(Value);
     }
-    public void moveservo() {
-        armservo.setAngle(15);
-        
+    public void moveservo180() {
+        armservo.setAngle(180);
+    }
+    public void reverseservo180() {
+        armservo.setAngle(-180);
     }
 }

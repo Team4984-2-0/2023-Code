@@ -57,7 +57,7 @@ public class AutonomousCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_Winch.moveservo();
+        m_Winch.moveservo180();
         //System.out.println("Autonomous 1");
         //if(sleepCounter < 40){
             m_DriveTrain.drive(0.65, 0.65);
