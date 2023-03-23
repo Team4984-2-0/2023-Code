@@ -23,8 +23,10 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutonomousCommand2;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.PIDDriveTrain;
+import java.lang.Math;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -80,9 +82,28 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+
+         //System.out.println("chooser: " + m_robotContainer.m_chooser.toString());
+
+/*         if (m_robotContainer.m_chooser.getSelected() == m_robotContainer.AutonomousCommand2) {
+            
+            PIDDriveTrain.m_Odometry.resetPosition(PIDDriveTrain.m_DriveTrainGyro_initial.getRotation2d(), 
+            PIDDriveTrain.leftFrontEncoder_initial.getPosition(), PIDDriveTrain.rightFrontEncoder_initial.getPosition(), 
+            new Pose2d(2.4, 1.2, new Rotation2d(Math.toRadians(180))));
+
+        } 
+        else {
+
+            PIDDriveTrain.m_Odometry.resetPosition(PIDDriveTrain.m_DriveTrainGyro_initial.getRotation2d(), 
+            PIDDriveTrain.leftFrontEncoder_initial.getPosition(), PIDDriveTrain.rightFrontEncoder_initial.getPosition(), 
+            new Pose2d(2.4, 1.2, new Rotation2d())); 
+
+        }*/
+
         PIDDriveTrain.m_Odometry.resetPosition(PIDDriveTrain.m_DriveTrainGyro_initial.getRotation2d(), 
         PIDDriveTrain.leftFrontEncoder_initial.getPosition(), PIDDriveTrain.rightFrontEncoder_initial.getPosition(), 
-        new Pose2d(2.4, 1.2, new Rotation2d()));
+        new Pose2d(2.4, 1.2, new Rotation2d(Math.toRadians(180))));
+
     }
 
     @Override

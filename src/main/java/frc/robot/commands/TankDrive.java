@@ -22,7 +22,7 @@ import frc.robot.subsystems.PIDDriveTrain;
 public class TankDrive extends CommandBase {
 
     private final PIDDriveTrain m_driveTrain;
-    private double left;
+    public static double left;
     private double right;
     private XboxController xbox;
 

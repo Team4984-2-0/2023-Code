@@ -1,19 +1,17 @@
 {
   "Docking": {
-    "Data": [
-      "DockNode  ID=0x00000001 Pos=1025,20 Size=250,695 Selected=0xB5CBE9F0"
-    ]
+    "Data": []
   },
   "MainWindow": {
     "GLOBAL": {
       "fps": "120",
-      "height": "1369",
-      "maximized": "1",
+      "height": "1360",
+      "maximized": "0",
       "style": "0",
       "userScale": "2",
-      "width": "2560",
-      "xpos": "0",
-      "ypos": "23"
+      "width": "1278",
+      "xpos": "1281",
+      "ypos": "31"
     }
   },
   "Table": {
@@ -36,13 +34,13 @@
     },
     "###/SmartDashboard/Auto Mode": {
       "Collapsed": "0",
-      "Pos": "681,289",
+      "Pos": "683,288",
       "Size": "254,54"
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "793,65",
-      "Size": "1752,1131"
+      "Pos": "218,757",
+      "Size": "737,525"
     },
     "###FMS": {
       "Collapsed": "0",
@@ -56,12 +54,11 @@
     },
     "###NetworkTables": {
       "Collapsed": "0",
-      "Pos": "1259,20",
+      "Pos": "1259,19",
       "Size": "885,866"
     },
     "###Other Devices": {
       "Collapsed": "0",
-      "DockId": "0x00000001,0",
       "Pos": "1025,20",
       "Size": "250,695"
     },

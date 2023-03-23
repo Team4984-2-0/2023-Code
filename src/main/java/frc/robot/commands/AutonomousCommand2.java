@@ -13,6 +13,7 @@
 package frc.robot.commands;
 import java.util.concurrent.TimeUnit;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -73,7 +74,7 @@ public class AutonomousCommand2 extends CommandBase {
             else if(sleepCounter == 76){
                 m_Grabber.stop();
                 System.out.println("STARTING PHASE 3");
-                while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                while(Units.feetToMeters(-8.5) < (m_DriveTrain.rightFrontEncoder.getPosition())) {
                     m_DriveTrain.drive(-0.65,0.65);
                     if(RobotState.isTeleop()) {
                         break;

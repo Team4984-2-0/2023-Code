@@ -28,6 +28,7 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
@@ -62,8 +63,8 @@ public class PIDDriveTrain extends PIDSubsystem {
     private int loopcounter;
     private RelativeEncoder leftBackEncoder;
     private RelativeEncoder leftFrontEncoder;
-    public RelativeEncoder rightBackEncoder;
-    private RelativeEncoder rightFrontEncoder;
+    private RelativeEncoder rightBackEncoder;
+    public RelativeEncoder rightFrontEncoder;
     private String MotorMode;
     private double groundincline;
     private PowerDistribution PDP;
@@ -82,10 +83,16 @@ public class PIDDriveTrain extends PIDSubsystem {
     private static final double radius = Units.inchesToMeters(3); //drivetrain wheel radius
     private static final double track = 0.61; //track width
     public Field2d m_field = new Field2d();
-    public Pose2d m_pose;
+    public static Pose2d m_pose;
     public static AHRS m_DriveTrainGyro_initial;
     public static RelativeEncoder leftFrontEncoder_initial;
     public static RelativeEncoder rightFrontEncoder_initial;
+    private double rightDriveVelocity;
+    private double leftDriveVelocity;
+    public static double conversion;
+    public static double freeSpeed;
+    public static double timeElapsed;
+    public static double totalTime = 0;
 
     DifferentialDrivetrainSim m_DrivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(
         4), gearing, moi, mass, radius, track, VecBuilder.fill(0.001, 0.001,
@@ -183,6 +190,10 @@ public class PIDDriveTrain extends PIDSubsystem {
         -leftFrontEncoder_initial.getPosition(), rightFrontEncoder_initial.getPosition(), 
         new Pose2d(2.4, 1.2, new Rotation2d()));
 
+        leftFrontEncoder.setPositionConversionFactor(Units.feetToMeters(gearing * radius * 2)); //conversion from shaft position to wheel position
+        conversion = leftFrontEncoder.getPositionConversionFactor(); //rotation to meters
+        freeSpeed = 5676; //neo max rpm
+
     } 
     
     @Override
@@ -195,10 +206,6 @@ public class PIDDriveTrain extends PIDSubsystem {
             timecount = 0;
         }
         timecount++;
-        // SmartDashboard.putNumber("leftBackEncoder",leftBackEncoder.getPosition());
-        // SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
-        // SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
-        // SmartDashboard.putNumber("rightFrontEncoder",rightFrontEncoder.getPosition());
 
         // Sim
         var gyroAngle = m_DriveTrainGyro.getRotation2d();
@@ -245,13 +252,13 @@ public class PIDDriveTrain extends PIDSubsystem {
         // This method will be called once per scheduler run when in simulation
         REVPhysicsSim.getInstance().run();
 
-        m_DrivetrainSim.setInputs(leftFrontMotor.get() * RobotController.getInputVoltage(),
-        rightFrontMotor.get() * RobotController.getInputVoltage());
-
+        m_DrivetrainSim.setInputs(leftDriveVelocity * RobotController.getInputVoltage(),
+        rightDriveVelocity * RobotController.getInputVoltage());
+            
         m_DrivetrainSim.update(0.02);
 
-        leftFrontEncoder.setPosition(m_DrivetrainSim.getLeftPositionMeters());
-        rightFrontEncoder.setPosition(m_DrivetrainSim.getRightPositionMeters());
+        leftFrontEncoder.setPosition(m_DrivetrainSim.getLeftPositionMeters()*conversion);
+        rightFrontEncoder.setPosition(m_DrivetrainSim.getRightPositionMeters()*conversion);
         m_DriveTrainGyro.setAngleAdjustment(-m_DrivetrainSim.getHeading().getDegrees());
 
     }
@@ -275,6 +282,9 @@ public class PIDDriveTrain extends PIDSubsystem {
             leftDrive = ((-1)-0)/((-1)-(-deadZone)) * (leftDrive-(-1)) + (-1);
 
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
+        leftDriveVelocity = leftDrive;
+        rightDriveVelocity = -rightDrive;
+        simulationPeriodic();
         //System.out.println("LeftDrive: " + leftDrive + "RightDrive: " + rightDrive);
         loopcounter++;
         if (loopcounter > 3) {
