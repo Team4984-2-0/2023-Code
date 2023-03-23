@@ -59,6 +59,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private static final double kI = 0.0;
     private static final double kD = 0.0;
     private static final double kF = 1.0;
+    private int timecount;
 
     private static final String robottype = "";
 
@@ -139,7 +140,7 @@ public class PIDDriveTrain extends PIDSubsystem {
         PDP = new PowerDistribution(0, ModuleType.kCTRE);
         ShuffleboardTab showpower = Shuffleboard.getTab("Power");
         showpower.add("pdp",PDP);
-
+        timecount = 0;
 
 
     }
@@ -148,12 +149,16 @@ public class PIDDriveTrain extends PIDSubsystem {
     public void periodic() {
         // This method will be called once per scheduler run
         super.periodic();
-        SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
-        SmartDashboard.putString("Motor Mode",getMotorMode());
-        SmartDashboard.putNumber("leftBackEncoder",leftBackEncoder.getPosition());
-        SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
-        SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
-        SmartDashboard.putNumber("rightFrontEncoder",rightFrontEncoder.getPosition());
+        if(timecount == 30) {
+            SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
+            SmartDashboard.putString("Motor Mode",getMotorMode());
+            timecount = 0;
+        }
+        timecount++;
+        // SmartDashboard.putNumber("leftBackEncoder",leftBackEncoder.getPosition());
+        // SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
+        // SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
+        // SmartDashboard.putNumber("rightFrontEncoder",rightFrontEncoder.getPosition());
     }
 
     @Override

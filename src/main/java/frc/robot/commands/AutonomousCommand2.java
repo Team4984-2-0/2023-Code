@@ -13,6 +13,7 @@
 package frc.robot.commands;
 import java.util.concurrent.TimeUnit;
 
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Grabber;
@@ -58,26 +59,33 @@ public class AutonomousCommand2 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        sleepCounter = sleepCounter + 1;
-        if(sleepCounter == 1){
-            m_DriveTrain.setBrakeMode();
-            System.out.println("STARTING PHASE 1");
-            m_Winch.moveservo();
-        }
-        else if(sleepCounter == 30){
-            System.out.println("STARTING PHASE 2");
-            m_Grabber.open();
-        }
-        else if(sleepCounter == 31){
-            m_Grabber.stop();
-            System.out.println("STARTING PHASE 3");
-            while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
-                m_DriveTrain.drive(-0.65,0.65);
+        if (RobotState.isAutonomous()) {
+            sleepCounter = sleepCounter + 1;
+            if(sleepCounter == 1){
+                m_DriveTrain.setBrakeMode();
+                System.out.println("STARTING PHASE 1");
+                m_Winch.moveservo180();
             }
-            m_DriveTrain.drive(0, 0);
-            m_DriveTrain.setCoastMode();
-            System.out.println("STARTING PHASE 3 END");
+            else if(sleepCounter == 45){
+                System.out.println("STARTING PHASE 2");
+                m_Grabber.open();
+            }
+            else if(sleepCounter == 76){
+                m_Grabber.stop();
+                System.out.println("STARTING PHASE 3");
+                while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                    m_DriveTrain.drive(-0.65,0.65);
+                    if(RobotState.isTeleop()) {
+                        break;
+                    }
+                }
+                m_DriveTrain.drive(0, 0);
+                m_DriveTrain.setCoastMode();
+                //m_Winch.reverseservo180();
+                System.out.println("STARTING PHASE 3 END");
+            }
         }
+ 
         
     }
 
@@ -89,9 +97,9 @@ public class AutonomousCommand2 extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {  
-        if (sleepCounter > Constants.sleepCounterConstant)
+        if (sleepCounter > Constants.sleepCounterConstant | RobotState.isTeleop())
         {
-            m_DriveTrain.drive(0, 0);
+            //m_DriveTrain.drive(0, 0);
             sleepCounter = 0;
             return true;
         }

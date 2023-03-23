@@ -29,10 +29,10 @@ public class Constants {
     public static final int CANFrontRight = 1;
     public static final int CANWinch = 5;
     public static final int CANGrabber = 6;
-    public static final int CAMERA1_FPS = 10;
+    public static final int CAMERA1_FPS = 30;
     public static final int CAMERA1_BRIGHTNESS = 50;
     public static boolean robottype = false; 
-    public static int sleepCounterConstant = 32;
+    public static int sleepCounterConstant = 77;
     public static double encoderfullrotation = 13.2143182; 
     public static double wheelcircumference = (6*3.14)/12;
     public static double RevPerFoot = encoderfullrotation/wheelcircumference;

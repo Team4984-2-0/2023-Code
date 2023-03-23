@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JacksonInject.Value;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -37,6 +39,7 @@ public class Grabber extends SubsystemBase {
         // Create motor
         GrabMotor = new CANSparkMax(6, MotorType.kBrushless);
         GrabMotor.setIdleMode(IdleMode.kBrake);
+        GrabMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 500);
 
     }
 
