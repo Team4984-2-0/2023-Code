@@ -15,14 +15,24 @@ package frc.robot.subsystems;
 import frc.robot.commands.*;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.kauailabs.navx.frc.AHRS;
@@ -30,6 +40,10 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.RelativeEncoder;
@@ -60,6 +74,24 @@ public class PIDDriveTrain extends PIDSubsystem {
     private static final double kD = 0.0;
     private static final double kF = 1.0;
     private int timecount;
+
+    // Sim
+    private static final double gearing = 3.68; //drivetrain gear ratio
+    private static final double mass = 41; //robot mass /kg
+    private static final double moi = 7.5;
+    private static final double radius = Units.inchesToMeters(3); //drivetrain wheel radius
+    private static final double track = 0.61; //track width
+    public Field2d m_field = new Field2d();
+    public Pose2d m_pose;
+    public static AHRS m_DriveTrainGyro_initial;
+    public static RelativeEncoder leftFrontEncoder_initial;
+    public static RelativeEncoder rightFrontEncoder_initial;
+
+    DifferentialDrivetrainSim m_DrivetrainSim = new DifferentialDrivetrainSim(DCMotor.getNEO(
+        4), gearing, moi, mass, radius, track, VecBuilder.fill(0.001, 0.001,
+        0.001, 0.1, 0.1, 0.005, 0.005));
+    
+    public static DifferentialDriveOdometry m_Odometry;
 
     private static final String robottype = "";
 
@@ -142,9 +174,17 @@ public class PIDDriveTrain extends PIDSubsystem {
         showpower.add("pdp",PDP);
         timecount = 0;
 
+        // Sim
+        SmartDashboard.putData("Field", m_field);
+        m_DriveTrainGyro_initial = m_DriveTrainGyro;
+        leftFrontEncoder_initial = leftFrontEncoder;
+        rightFrontEncoder_initial = rightFrontEncoder;
+        m_Odometry = new DifferentialDriveOdometry(m_DriveTrainGyro_initial.getRotation2d(), 
+        -leftFrontEncoder_initial.getPosition(), rightFrontEncoder_initial.getPosition(), 
+        new Pose2d(2.4, 1.2, new Rotation2d()));
 
-    }
-
+    } 
+    
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
@@ -159,6 +199,14 @@ public class PIDDriveTrain extends PIDSubsystem {
         // SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
         // SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
         // SmartDashboard.putNumber("rightFrontEncoder",rightFrontEncoder.getPosition());
+
+        // Sim
+        var gyroAngle = m_DriveTrainGyro.getRotation2d();
+        m_pose = m_Odometry.update(gyroAngle, leftFrontEncoder.getPosition(),
+        rightFrontEncoder.getPosition());
+
+        m_field.setRobotPose(m_pose);
+
     }
 
     @Override
@@ -182,9 +230,29 @@ public class PIDDriveTrain extends PIDSubsystem {
 
     }
 
+    
+    public void simulationInit() {
+
+        REVPhysicsSim.getInstance().addSparkMax(leftBackMotor, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(leftFrontMotor, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(rightBackMotor, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(rightFrontMotor, DCMotor.getNEO(1));
+
+    }
+
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run when in simulation
+        REVPhysicsSim.getInstance().run();
+
+        m_DrivetrainSim.setInputs(leftFrontMotor.get() * RobotController.getInputVoltage(),
+        rightFrontMotor.get() * RobotController.getInputVoltage());
+
+        m_DrivetrainSim.update(0.02);
+
+        leftFrontEncoder.setPosition(m_DrivetrainSim.getLeftPositionMeters());
+        rightFrontEncoder.setPosition(m_DrivetrainSim.getRightPositionMeters());
+        m_DriveTrainGyro.setAngleAdjustment(-m_DrivetrainSim.getHeading().getDegrees());
 
     }
 

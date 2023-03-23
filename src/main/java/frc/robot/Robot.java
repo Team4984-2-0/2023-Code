@@ -14,12 +14,17 @@ package frc.robot;
 
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.vision.VisionRunner.Listener;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.TankDrive;
+import frc.robot.subsystems.PIDDriveTrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -45,6 +50,7 @@ public class Robot extends TimedRobot {
         // autonomous chooser on the dashboard.
         m_robotContainer = RobotContainer.getInstance();
         HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_RobotBuilder);
+
     }
 
     /**
@@ -74,6 +80,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        PIDDriveTrain.m_Odometry.resetPosition(PIDDriveTrain.m_DriveTrainGyro_initial.getRotation2d(), 
+        PIDDriveTrain.leftFrontEncoder_initial.getPosition(), PIDDriveTrain.rightFrontEncoder_initial.getPosition(), 
+        new Pose2d(2.4, 1.2, new Rotation2d()));
     }
 
     @Override
