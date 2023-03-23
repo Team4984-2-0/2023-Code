@@ -152,6 +152,7 @@ public class PIDDriveTrain extends PIDSubsystem {
             SmartDashboard.putString("Motor Mode",getMotorMode());
             timecount = 0;
         }
+        timecount++;
         // SmartDashboard.putNumber("leftBackEncoder",leftBackEncoder.getPosition());
         // SmartDashboard.putNumber("leftFrontEncoder",leftFrontEncoder.getPosition());
         // SmartDashboard.putNumber("rightBackEncoder",rightBackEncoder.getPosition());
