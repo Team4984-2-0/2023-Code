@@ -1,7 +1,8 @@
-/* 
+ 
 package frc.robot.commands;
 import java.util.concurrent.TimeUnit;
 
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Grabber;
@@ -18,6 +19,8 @@ public class AutonomousCommand3 extends CommandBase {
     private Winch m_Winch;
     private PIDDriveTrain m_DriveTrain;
     private int sleepCounter;
+    private int sleepCounterMax;
+    private double NAVXLevel;
 
 
     public AutonomousCommand3(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
@@ -25,7 +28,7 @@ public class AutonomousCommand3 extends CommandBase {
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
-
+        sleepCounterMax = 80;
     }
 
     // Called when the command is initially scheduled.
@@ -46,23 +49,67 @@ public class AutonomousCommand3 extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        //m_Winch.moveservo();
-        // needs wait
-        //m_Grabber.open();
-        // needs wait
-        while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
-            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
-            m_DriveTrain.drive(-0.65,0.65);
-            //System.out.println(m_DriveTrain.rightBackEncoder.getPosition());
-            //System.out.println("testing");
-        // add loop to check if it has gone distance
-         //going backwards at 65% during auto 
+        if (RobotState.isAutonomous()) {
+            sleepCounter = sleepCounter + 1;
+            switch(sleepCounter) {
+                case 1:
+                    System.out.println("STARTING PHASE 1: Initial Release");
+                    m_DriveTrain.setBrakeMode();
+                    m_Winch.moveservo180();
+                    NAVXLevel = m_DriveTrain.getNavXRoll();
+                    System.out.println("PHASE 1 Finished");
+                    break;
+                case 45:
+                    System.out.println("STARTING PHASE 2: Open Grabber");
+                    m_Grabber.open();
+                    System.out.println("PHASE 2 Finished");
+                    break;
+                case 76:
+                    m_Grabber.stop();
+                    System.out.println("STARTING PHASE 3: Drive backwards 14ft");
+                    while(Constants.RevPerFoot*(-14) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                        m_DriveTrain.drive(-0.65,0.65);
+                        if(RobotState.isTeleop()) {
+                            break;
+                        }
+                    }
+                    System.out.println("PHASE 3 Finished");
+                    break;
+                case 77: 
+                    System.out.println("STARTING PHASE 4: Drive forward 8ft");
+                    while(Constants.RevPerFoot*(-8) > m_DriveTrain.rightBackEncoder.getPosition()) {
+                        m_DriveTrain.drive(0.65,-0.65);
+                        if(RobotState.isTeleop()) {
+                            break;
+                        }
+                    }
+                    System.out.println("PHASE 4 Finished");
+                    break;
+                case 78:
+                    System.out.println("STARTING PHASE 5: Balance");
+                    while((Math.abs(m_DriveTrain.getNavXRoll() - NAVXLevel) >  2 )) {
+
+                        if((m_DriveTrain.getNavXRoll()) < NAVXLevel){
+                            m_DriveTrain.drive(0.30,-0.30);
+                        }
+                        else if((m_DriveTrain.getNavXRoll()) > NAVXLevel){
+                            m_DriveTrain.drive(-0.30,0.30);
+                        }
+                        if(RobotState.isTeleop()) {
+                            break;
+                        }
+                    }
+                    m_DriveTrain.drive(0, 0);
+                    System.out.println("PHASE 5 Finished");
+                    break;
+                case 79:
+                    System.out.println("STARTING PHASE 6: Cleanup");
+                    m_DriveTrain.drive(0, 0);
+                    m_DriveTrain.setCoastMode();
+                    System.out.println("PHASE 6 Finished");
+                    break;
+            }   
         }
-
-        // stop
-        m_DriveTrain.drive(0,0);
-
-        
     }
 
     // Called once the command ends or is interrupted.
@@ -73,7 +120,17 @@ public class AutonomousCommand3 extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        if (sleepCounter > sleepCounterMax | RobotState.isTeleop())
+        {
+            if(RobotState.isTeleop()) {
+                System.out.println("Teleop has started fiinishing Autonomous");
+            }
+            System.out.println("Autonomous Finished");
+            sleepCounter = 0;
+            return true;
+        }
+        else 
+            return false;
 
 
     }
@@ -86,4 +143,3 @@ public class AutonomousCommand3 extends CommandBase {
 
     }
 }
-*/
