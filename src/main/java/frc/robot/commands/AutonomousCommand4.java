@@ -55,7 +55,7 @@ public class AutonomousCommand4 extends CommandBase {
                 case 1:
                     System.out.println("STARTING PHASE 1: Initial Release");
                     m_DriveTrain.setBrakeMode();
-                    //m_Winch.moveservo180();
+                    m_Winch.moveservo180();
                     NAVXLevel = m_DriveTrain.getNavXRoll();
                     System.out.println("PHASE 1 Finished");
                     break;
@@ -70,7 +70,7 @@ public class AutonomousCommand4 extends CommandBase {
                     while(Constants.RevPerFoot*(-8) < m_DriveTrain.rightBackEncoder.getPosition()) {
                         m_DriveTrain.drive(-0.45,0.45);
                         if(RobotState.isTeleop()) {
-                            m_Winch.moveservo180();
+                            //m_Winch.moveservo180();
                             break;
                         }
                     }
@@ -100,7 +100,7 @@ public class AutonomousCommand4 extends CommandBase {
                             m_DriveTrain.drive(0.10,-0.10);
                         }
                         if(RobotState.isTeleop()) {
-                            m_Winch.moveservo180();
+                            //m_Winch.moveservo180();
                             break;
                         }
                     }
@@ -110,7 +110,7 @@ public class AutonomousCommand4 extends CommandBase {
                 case 78:
                     System.out.println("STARTING PHASE 5: Cleanup");
                     m_DriveTrain.drive(0, 0);
-                    m_Winch.moveservo180();
+                    //m_Winch.moveservo180();
                     m_DriveTrain.setCoastMode();
                     System.out.println("PHASE 5 Finished");
                     break;
