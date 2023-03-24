@@ -73,7 +73,7 @@ public class AutonomousCommand2 extends CommandBase {
             else if(sleepCounter == 76){
                 m_Grabber.stop();
                 System.out.println("STARTING PHASE 3");
-                while(Constants.RevPerFoot*(-17) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                while(Constants.RevPerFoot*(-10.5) < m_DriveTrain.rightBackEncoder.getPosition()) {
                     m_DriveTrain.drive(-0.65,0.65);
                     if(RobotState.isTeleop()) {
                         break;

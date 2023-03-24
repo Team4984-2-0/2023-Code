@@ -59,6 +59,7 @@ public class PIDDriveTrain extends PIDSubsystem {
     private static final double kD = 0.0;
     private static final double kF = 1.0;
     private int timecount;
+    private double deadZone = 0.09;
 
     private static final String robottype = "";
 
@@ -109,10 +110,15 @@ public class PIDDriveTrain extends PIDSubsystem {
             rightMotors = new MotorControllerGroup(rightBackMotor, rightFrontMotor);
             addChild("Motor Controller Group 2", rightMotors);
             setCoastMode();
-            leftFrontMotor.setOpenLoopRampRate(0.3);
+            /*leftFrontMotor.setOpenLoopRampRate(0.3);
             leftBackMotor.setOpenLoopRampRate(0.3);
             rightFrontMotor.setOpenLoopRampRate(0.3);
             rightBackMotor.setOpenLoopRampRate(0.3);
+            */
+            leftFrontMotor.setOpenLoopRampRate(0);
+            leftBackMotor.setOpenLoopRampRate(0);
+            rightFrontMotor.setOpenLoopRampRate(0);
+            rightBackMotor.setOpenLoopRampRate(0);
 
             leftBackEncoder = leftBackMotor.getEncoder();
             leftFrontEncoder = leftFrontMotor.getEncoder();
@@ -150,6 +156,7 @@ public class PIDDriveTrain extends PIDSubsystem {
         if(timecount == 30) {
             SmartDashboard.putNumber("NavX Roll Value",getNavXRoll());
             SmartDashboard.putString("Motor Mode",getMotorMode());
+            SmartDashboard.putNumber("Velocity", -leftFrontEncoder.getVelocity()*(1.57/69)/3.68/3); //ft/rev * rev/sec * 1/gearing * 1/wheel radius
             timecount = 0;
         }
         timecount++;
@@ -190,10 +197,19 @@ public class PIDDriveTrain extends PIDSubsystem {
     // here. Call these from Commands.
 
     public void drive(double leftDrive, double rightDrive) {
-        if (Math.abs(rightDrive) < 0.08)
+        if (Math.abs(rightDrive) < deadZone)
             rightDrive = 0.0;
-        if (Math.abs(leftDrive) < 0.08)
+        else if (rightDrive > 0)
+            rightDrive = (1-0)/(1-deadZone) * (rightDrive-1) + 1;
+        else if (rightDrive < 0)
+            rightDrive = ((-1)-0)/((-1)-(-deadZone)) * (rightDrive-(-1)) + (-1);
+        
+        if (Math.abs(leftDrive) < deadZone)
             leftDrive = 0.0;
+        else if (leftDrive > 0)
+            leftDrive = (1-0)/(1-deadZone) * (leftDrive-1) + 1;
+        else if (leftDrive < 0)        
+            leftDrive = ((-1)-0)/((-1)-(-deadZone)) * (leftDrive-(-1)) + (-1);
 
         differentialDrive1.tankDrive(leftDrive, -rightDrive);
         //System.out.println("LeftDrive: " + leftDrive + "RightDrive: " + rightDrive);
