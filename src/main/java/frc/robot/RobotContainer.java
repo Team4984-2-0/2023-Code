@@ -93,7 +93,7 @@ public class RobotContainer {
     m_chooser.setDefaultOption("DO NOT USE", new AutonomousCommand(m_Grabber, m_Winch, m_driveTrain)); 
     m_chooser.addOption("Straight Back", new AutonomousCommand2(m_Grabber, m_Winch, m_driveTrain));
     m_chooser.addOption("Middle Taxi and Balance", new AutonomousCommand3(m_Grabber, m_Winch, m_driveTrain));
-    //m_chooser.addOption("Middle Balance", new AutonomousCommand4(m_Grabber, m_Winch, m_driveTrain));
+    m_chooser.addOption("Middle Balance", new AutonomousCommand4(m_Grabber, m_Winch, m_driveTrain));
     m_driveTrain.setDefaultCommand(new TankDrive(driver, m_driveTrain));
     m_Winch.setDefaultCommand(new MoveWinch(operator, m_Winch));
 
