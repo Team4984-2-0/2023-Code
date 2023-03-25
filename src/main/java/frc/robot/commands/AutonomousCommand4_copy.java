@@ -77,11 +77,9 @@ public class AutonomousCommand4_copy extends CommandBase {
                     }
                 }
                 else if (sleepCounter > 76){
-                    while(Constants.RevPerFoot*(-8.5) < m_DriveTrain.rightBackEncoder.getPosition()) {
-                        m_DriveTrain.drive(-0.45,0.45);
-                        if(RobotState.isTeleop()) {
-                            break;
-                        }
+                    m_DriveTrain.drive(-0.45,0.45);
+                    if(RobotState.isTeleop()) {
+                        break;
                     }
                 }
             }
