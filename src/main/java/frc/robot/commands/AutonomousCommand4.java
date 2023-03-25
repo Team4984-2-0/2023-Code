@@ -1,3 +1,4 @@
+ 
 package frc.robot.commands;
 import java.util.concurrent.TimeUnit;
 
@@ -12,21 +13,22 @@ import java.util.concurrent.TimeUnit;
 
 
  
-public class AutonomousCommand3 extends CommandBase {
+public class AutonomousCommand4 extends CommandBase {
 
     private Grabber m_Grabber;
     private Winch m_Winch;
     private PIDDriveTrain m_DriveTrain;
     private int sleepCounter;
+    private int sleepCounterMax;
     private double NAVXLevel;
 
 
-    public AutonomousCommand3(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
+    public AutonomousCommand4(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
         m_Grabber = Grabber_sub;
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
-
+        sleepCounterMax = 80;
     }
 
     // Called when the command is initially scheduled.
@@ -53,7 +55,7 @@ public class AutonomousCommand3 extends CommandBase {
                 case 1:
                     System.out.println("STARTING PHASE 1: Initial Release");
                     m_DriveTrain.setBrakeMode();
-                    //m_Winch.moveservo180();
+                    m_Winch.moveservo180();
                     NAVXLevel = m_DriveTrain.getNavXRoll();
                     System.out.println("PHASE 1 Finished");
                     break;
@@ -65,58 +67,50 @@ public class AutonomousCommand3 extends CommandBase {
                 case 76:
                     m_Grabber.stop();
                     System.out.println("STARTING PHASE 3: Drive backwards 14ft");
-                    while(Constants.RevPerFoot*(-12) < m_DriveTrain.rightBackEncoder.getPosition()) {
-                        m_DriveTrain.drive(-0.55,0.55);
+                    while(Constants.RevPerFoot*(-8.5) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                        m_DriveTrain.drive(-0.45,0.45);
                         if(RobotState.isTeleop()) {
-                            m_Winch.moveservo180();
+                            //m_Winch.moveservo180();
                             break;
                         }
                     }
                     System.out.println("PHASE 3 Finished");
                     break;
-                case 77: 
-                    System.out.println("STARTING PHASE 4: Drive forward 8ft");
-                    while(Constants.RevPerFoot*(-8) > m_DriveTrain.rightBackEncoder.getPosition()) {
-                        m_DriveTrain.drive(0.55,-0.55);
+                case 77:
+                    System.out.println("STARTING PHASE 4: Balance");
+                    int count = 0;
+                    while
+                    (((Math.abs(m_DriveTrain.getNavXRoll() - NAVXLevel) >  1.5 ) || count <500)) {
+                        count++;
+                        if((m_DriveTrain.getNavXRoll()) < NAVXLevel){
+                            m_DriveTrain.drive(-0.55,0.55);
+                            System.out.println("Going Down");
+                        }
+                        else if((m_DriveTrain.getNavXRoll()) > NAVXLevel){
+                            m_DriveTrain.drive(0.55,-0.55);
+                            System.out.println("Going Up");
+
+                        }
                         if(RobotState.isTeleop()) {
-                            m_Winch.moveservo180();
+                            //m_Winch.moveservo180();
                             break;
                         }
+                        System.out.println("Count: "+ count);
+
+                        //m_DriveTrain.drive(0, 0);
                     }
+                    //m_DriveTrain.drive(0, 0);
                     System.out.println("PHASE 4 Finished");
                     break;
                 case 78:
-                    System.out.println("STARTING PHASE 5: Balance");
-                    while((Math.abs(m_DriveTrain.getNavXRoll() - NAVXLevel) >  1.5 )) {
-
-                        if((m_DriveTrain.getNavXRoll()) < NAVXLevel){
-                            m_DriveTrain.drive(-0.10,0.10);
-                        }
-                        else if((m_DriveTrain.getNavXRoll()) > NAVXLevel){
-                            m_DriveTrain.drive(0.10,-0.10);
-                        }
-                        if(RobotState.isTeleop()) {
-                            m_Winch.moveservo180();
-                            break;
-                        }
-                    }
+                    System.out.println("STARTING PHASE 5: Cleanup");
                     m_DriveTrain.drive(0, 0);
-                    System.out.println("PHASE 5 Finished");
-                    break;
-                case 79:
-                    System.out.println("STARTING PHASE 6: Cleanup");
-                    m_DriveTrain.drive(0, 0);
-                    m_Winch.moveservo180();
+                    //m_Winch.moveservo180();
                     m_DriveTrain.setCoastMode();
-                    System.out.println("PHASE 6 Finished");
+                    System.out.println("PHASE 5 Finished");
                     break;
             }   
         }
-
-        // stop
-        m_DriveTrain.drive(0,0);
-
-        
     }
 
     // Called once the command ends or is interrupted.
@@ -127,7 +121,17 @@ public class AutonomousCommand3 extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        if (sleepCounter > sleepCounterMax | RobotState.isTeleop())
+        {
+            if(RobotState.isTeleop()) {
+                System.out.println("Teleop has started fiinishing Autonomous");
+            }
+            System.out.println("Autonomous Finished");
+            sleepCounter = 0;
+            return true;
+        }
+        else 
+            return false;
 
 
     }
