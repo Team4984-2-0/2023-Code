@@ -67,7 +67,7 @@ public class AutonomousCommand4 extends CommandBase {
                 case 76:
                     m_Grabber.stop();
                     System.out.println("STARTING PHASE 3: Drive backwards 14ft");
-                    while(Constants.RevPerFoot*(-8) < m_DriveTrain.rightBackEncoder.getPosition()) {
+                    while(Constants.RevPerFoot*(-7) < m_DriveTrain.rightBackEncoder.getPosition()) {
                         m_DriveTrain.drive(-0.45,0.45);
                         if(RobotState.isTeleop()) {
                             //m_Winch.moveservo180();
@@ -91,18 +91,24 @@ public class AutonomousCommand4 extends CommandBase {
                     */
                 case 77:
                     System.out.println("STARTING PHASE 4: Balance");
-                    while((Math.abs(m_DriveTrain.getNavXRoll() - NAVXLevel) >  1.5 )) {
-
+                    int count = 0;
+                    while
+                    (
+                        ((Math.abs(m_DriveTrain.getNavXRoll() - NAVXLevel) >  1.5 ) || 
+                            count < 5)
+                    ) {
+                        count++;
                         if((m_DriveTrain.getNavXRoll()) < NAVXLevel){
-                            m_DriveTrain.drive(-0.10,0.10);
+                            m_DriveTrain.drive(0.10,-0.10);
                         }
                         else if((m_DriveTrain.getNavXRoll()) > NAVXLevel){
-                            m_DriveTrain.drive(0.10,-0.10);
+                            m_DriveTrain.drive(-0.10,0.10);
                         }
                         if(RobotState.isTeleop()) {
                             //m_Winch.moveservo180();
                             break;
                         }
+                        
                     }
                     m_DriveTrain.drive(0, 0);
                     System.out.println("PHASE 4 Finished");
