@@ -121,9 +121,9 @@
               "Controls/Show controls": true,
               "Controls/Rotation": "NONE",
               "compression": -1.0,
-              "fps": -1,
-              "imageWidth": 0,
-              "imageHeight": 0
+              "fps": 60,
+              "imageWidth": 100,
+              "imageHeight": 100
             }
           },
           "6,0": {
@@ -186,9 +186,9 @@
               "Controls/Show controls": false,
               "Controls/Rotation": "NONE",
               "compression": -1.0,
-              "fps": -1,
-              "imageWidth": 0,
-              "imageHeight": 0
+              "fps": 60,
+              "imageWidth": 100,
+              "imageHeight": 100
             }
           },
           "0,1": {

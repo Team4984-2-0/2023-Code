@@ -68,7 +68,7 @@ public class AutonomousCommand2 extends CommandBase {
             }
             else if(sleepCounter == 45){
                 System.out.println("STARTING PHASE 2");
-                m_Grabber.open();
+                m_Grabber.autoOpen();
             }
             else if(sleepCounter == 76){
                 m_Grabber.stop();

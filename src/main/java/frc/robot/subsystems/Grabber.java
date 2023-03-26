@@ -64,6 +64,12 @@ public class Grabber extends SubsystemBase {
         GrabMotor.set(-0.30);
 
     }
+    public void autoOpen() {
+        // moves the motor
+        // Robot.printYellow("Grabber open");
+        GrabMotor.set(-0.15);
+
+    }
 
     public void close() {
         // moves the motor

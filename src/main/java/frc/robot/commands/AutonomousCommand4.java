@@ -61,7 +61,7 @@ public class AutonomousCommand4 extends CommandBase {
                     break;
                 case 45:
                     System.out.println("STARTING PHASE 2: Open Grabber");
-                    m_Grabber.open();
+                    m_Grabber.autoOpen();
                     System.out.println("PHASE 2 Finished");
                     break;
                 case 76:
