@@ -19,6 +19,8 @@ public class AutonomousCommand3 extends CommandBase {
     private PIDDriveTrain m_DriveTrain;
     private int sleepCounter;
     private double NAVXLevel;
+    private int sleepCounterMax;
+    private int NAVXwait;
 
 
     public AutonomousCommand3(Grabber Grabber_sub, Winch Winch_sub, PIDDriveTrain DriveTrain_sub) {
@@ -26,6 +28,7 @@ public class AutonomousCommand3 extends CommandBase {
         m_Winch = Winch_sub;
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
+        sleepCounterMax = 87;
 
     }
 
@@ -83,17 +86,23 @@ public class AutonomousCommand3 extends CommandBase {
                             break;
                         }
                     }
+                    m_DriveTrain.drive(0,0);
                     System.out.println("PHASE 4 Finished");
                     break;
-                case 78:
+                case 85:
                     System.out.println("STARTING PHASE 5: Balance");
+                    System.out.println("NAVX: " + NAVXLevel);
+                    NAVXwait=0;
                     while((Math.abs(m_DriveTrain.getNavXRoll() - NAVXLevel) >  1.5 )) {
-
-                        if((m_DriveTrain.getNavXRoll()) < NAVXLevel){
-                            m_DriveTrain.drive(-0.10,0.10);
-                        }
-                        else if((m_DriveTrain.getNavXRoll()) > NAVXLevel){
-                            m_DriveTrain.drive(0.10,-0.10);
+                        NAVXwait++;
+                        if(NAVXwait == 30){
+                            if((m_DriveTrain.getNavXRoll()) < NAVXLevel){
+                                m_DriveTrain.drive(-0.10,0.10);
+                            }
+                            else if((m_DriveTrain.getNavXRoll()) > NAVXLevel){
+                                m_DriveTrain.drive(0.10,-0.10);
+                            }
+                            NAVXwait = 0;
                         }
                         if(RobotState.isTeleop()) {
                             m_Winch.moveservo180();
@@ -103,7 +112,7 @@ public class AutonomousCommand3 extends CommandBase {
                     m_DriveTrain.drive(0, 0);
                     System.out.println("PHASE 5 Finished");
                     break;
-                case 79:
+                case 86:
                     System.out.println("STARTING PHASE 6: Cleanup");
                     m_DriveTrain.drive(0, 0);
                     m_Winch.moveservo180();
@@ -127,7 +136,17 @@ public class AutonomousCommand3 extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return true;
+        if (sleepCounter > sleepCounterMax | RobotState.isTeleop())
+        {
+            if(RobotState.isTeleop()) {
+                System.out.println("Teleop has started fiinishing Autonomous");
+            }
+            System.out.println("Autonomous Finished");
+            sleepCounter = 0;
+            return true;
+        }
+        else 
+            return false;
 
 
     }
