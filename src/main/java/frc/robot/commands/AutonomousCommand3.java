@@ -19,6 +19,7 @@ public class AutonomousCommand3 extends CommandBase {
     private PIDDriveTrain m_DriveTrain;
     private int sleepCounter;
     private double NAVXLevel;
+    private double NAVXCur;
     private int sleepCounterMax;
     private int NAVXwait;
 
@@ -29,6 +30,7 @@ public class AutonomousCommand3 extends CommandBase {
         m_DriveTrain = DriveTrain_sub;
         sleepCounter = 0;
         sleepCounterMax = 87;
+        
 
     }
 
@@ -93,13 +95,15 @@ public class AutonomousCommand3 extends CommandBase {
                     System.out.println("STARTING PHASE 5: Balance");
                     System.out.println("NAVX: " + NAVXLevel);
                     NAVXwait=0;
-                    while((Math.abs(m_DriveTrain.getNavXRoll() - NAVXLevel) >  1.5 )) {
+                    NAVXCur = m_DriveTrain.getNavXRoll();
+                    while((Math.abs(NAVXCur - NAVXLevel) >  1.5 )) {
                         NAVXwait++;
-                        if(NAVXwait == 30){
-                            if((m_DriveTrain.getNavXRoll()) < NAVXLevel){
+                        if(NAVXwait == 1000){
+                            NAVXCur = m_DriveTrain.getNavXRoll();
+                            if((NAVXCur) < NAVXLevel){
                                 m_DriveTrain.drive(-0.10,0.10);
                             }
-                            else if((m_DriveTrain.getNavXRoll()) > NAVXLevel){
+                            else if((NAVXCur) > NAVXLevel){
                                 m_DriveTrain.drive(0.10,-0.10);
                             }
                             NAVXwait = 0;
